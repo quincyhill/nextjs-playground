@@ -1,15 +1,14 @@
 import React from "react";
 import logo from "./logo.svg";
-import "./App.css";
-import Button from "./components/Button";
-import ExampleWithManyStates from "./components/ExampleWithManyStates";
+import Home from "./layouts/Home";
+
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
-    <div className="App">
-      <Button />
-      <ExampleWithManyStates />
-    </div>
+    <React.Fragment>
+      <Home />
+    </React.Fragment>
   );
 }
 
