@@ -50,3 +50,23 @@
 .lightText {
   color: #666;
 }
+
+.roundedCorner {
+  border-radius: 5px;
+}
+
+.noBorder {
+  border: 0;
+}
+
+.bgPrimaryColor {
+  background-color: lightcoral;
+}
+
+.btnHeight {
+  height: 2rem;
+}
+
+.btnWidth {
+  width: 5rem;
+}

@@ -4,8 +4,12 @@ import Layout, { siteTitle } from '../components/layout/layout'
 import utilStyles from '../styles/utils.module.css'
 import { getSortedPostsData } from '../lib/posts'
 
+// Remember each page function exports one of these, I've input code here because I need it to fetch the posts data to build the page
 export async function getStaticProps() {
+  // Fetch the posts using the the function I defined in my library
   const allPostsData = getSortedPostsData()
+
+  // Return those posts, these posts will now be passed to the `Home` component as a prop
   return {
     props: {
       allPostsData,
@@ -13,7 +17,9 @@ export async function getStaticProps() {
   }
 }
 
+// Using the {} Syntax for object destructuring
 export default function Home({ allPostsData }) {
+  // Also notice how utilstyles are going to be used in a similar fashion to tailwind.
   return (
     <Layout home>
       <Head>
@@ -30,7 +36,11 @@ export default function Home({ allPostsData }) {
         </p>
       </section>
       <Link href="/posts/first-post">
-        <button>Click here</button>
+        <button
+          className={`${utilStyles.roundedCorner} ${utilStyles.noBorder} ${utilStyles.bgPrimaryColor} ${utilStyles.btnWidth} ${utilStyles.btnHeight}`}
+        >
+          Click here
+        </button>
       </Link>
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <h2 className={utilStyles.headingLg}>Blog</h2>
