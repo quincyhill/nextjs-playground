@@ -45,6 +45,7 @@
 
 .listItem {
   margin: 0 0 1.25rem;
+  padding: 1rem;
 }
 
 .lightText {
@@ -61,6 +62,10 @@
 
 .bgPrimaryColor {
   background-color: lightcoral;
+}
+
+.bgSecondaryColor {
+  background-color: lightskyblue;
 }
 
 .btnHeight {
