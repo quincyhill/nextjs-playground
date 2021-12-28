@@ -4,23 +4,7 @@ import Layout, { siteTitle } from '../components/layout/layout'
 import utilStyles from '../styles/utils.module.css'
 import { getSortedPostsData } from '../lib/posts'
 import { getTodosFromJsonPlaceHolder } from '../lib/todos'
-
-// Remember each page function exports one of these, I've input code here because I need it to fetch the posts data to build the page
-export async function getStaticProps() {
-  // Fetch the posts using the function I defined in my library
-  const allPostsData = getSortedPostsData()
-
-  // Fetch the todos using the function I defined in my library
-  const todos20 = await getTodosFromJsonPlaceHolder()
-
-  // Return those posts, these posts will now be passed to the `Home` component as a prop
-  return {
-    props: {
-      allPostsData,
-      todos20,
-    },
-  }
-}
+import Date from '../components/date/date'
 
 // Using the {} Syntax for object destructuring
 export default function Home({ allPostsData, todos20 }) {
@@ -42,26 +26,18 @@ export default function Home({ allPostsData, todos20 }) {
           <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
         </p>
       </section>
-      <Link href="/posts/first-post">
-        <button
-          className={`${utilStyles.roundedCorner} ${utilStyles.noBorder} ${utilStyles.bgPrimaryColor} ${utilStyles.btnWidth} ${utilStyles.btnHeight}`}
-        >
-          Click here
-        </button>
-      </Link>
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <h2 className={utilStyles.headingLg}>Blog</h2>
         <ul className={utilStyles.list}>
           {allPostsData.map(({ id, date, title }) => (
-            <li
-              className={`${utilStyles.listItem} ${utilStyles.bgSecondaryColor} ${utilStyles.roundedCorner}`}
-              key={id}
-            >
-              {title}
+            <li className={utilStyles.listItem} key={id}>
+              <Link href={`/posts/${id}`}>
+                <a>{title}</a>
+              </Link>
               <br />
-              {id}
-              <br />
-              {date}
+              <small className={utilStyles.lightText}>
+                <Date dateString={date} />
+              </small>
             </li>
           ))}
         </ul>
@@ -83,4 +59,21 @@ export default function Home({ allPostsData, todos20 }) {
       </section>
     </Layout>
   )
+}
+
+// Remember each page function exports one of these, I've input code here because I need it to fetch the posts data to build the page
+export async function getStaticProps() {
+  // Fetch the posts using the function I defined in my library
+  const allPostsData = getSortedPostsData()
+
+  // Fetch the todos using the function I defined in my library
+  const todos20 = await getTodosFromJsonPlaceHolder()
+
+  // Return those posts, these posts will now be passed to the `Home` component as a prop
+  return {
+    props: {
+      allPostsData,
+      todos20,
+    },
+  }
 }
