@@ -23,6 +23,7 @@ export default function Post({ postData }) {
   )
 }
 
+// Both of these functions below run SERVER SIDE ONLY AND WONT BE INCLUDED ON THE BUILD just a note
 export async function getStaticPaths() {
   // Return a list of possible values for id, in this case its the title names of the markdown files
   const paths = getAllPostIds()
