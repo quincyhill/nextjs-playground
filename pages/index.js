@@ -19,7 +19,7 @@ export default function Home({ allPostsData, todos20 }) {
       <section className={utilStyles.headingMd}>
         <p>
           Hello, I'm <strong>Quincy</strong>. I need to finish my projects and
-          apply to more jobs
+          apply to more jobs Also I changed a few things here
         </p>
         <p>
           (This is a sample website - you’ll be building a site like this on{' '}
