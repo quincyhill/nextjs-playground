@@ -1,5 +1,8 @@
 // Remember this is now a dynamic site and I should pass in the name props
 import Head from 'next/head'
+import Link from 'next/link'
+import { NavLink } from '../../components/navlink'
+
 const Product = () => {
   function addProductJsonLd() {
     return {
@@ -67,6 +70,7 @@ const Product = () => {
       </Head>
       <h1>Product</h1>
       <p>Product for sale</p>
+      <NavLink href="/products">Back to products</NavLink>
     </div>
   )
 }
