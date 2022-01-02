@@ -16,6 +16,11 @@ export default function Home({ allPostsData, todos20 }) {
       <Head>
         <title>{siteTitle}</title>
       </Head>
+      <meta
+        name="description"
+        content="Just a testing next js project working on SEO"
+        key="desc"
+      />
       <section className={utilStyles.headingMd}>
         <p>
           Hello, I'm <strong>Quincy</strong>. I need to finish my projects and
