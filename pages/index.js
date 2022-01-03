@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Head from 'next/head'
+import Script from 'next/script'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
 
@@ -116,6 +117,10 @@ export default function Start({ countries }) {
           </span>
         </a>
       </footer>
+      <Script
+        strategy="afterInteractive"
+        src="https://www.googletagmanager.com/gtag/js?id=123"
+      />
     </div>
   )
 }
