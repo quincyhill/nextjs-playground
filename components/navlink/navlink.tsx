@@ -1,8 +1,13 @@
 import Link from 'next/link'
-import { FC } from 'react'
+import React from 'react'
 import s from './navlink.module.css'
 
-const NavLink = ({ href, children }) => {
+interface NavLinkProps {
+  href: string
+  children: React.ReactNode
+}
+
+const NavLink = ({ href, children }: NavLinkProps) => {
   return (
     <Link href={href}>
       <a href={href} className={s.bgPrimary}>

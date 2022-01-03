@@ -3,11 +3,17 @@ import Image from 'next/image'
 import styles from './layout.module.css'
 import utilStyles from '../../styles/utils.module.css'
 import Link from 'next/link'
+import React from 'react'
 
 const name = 'Quincy Hill'
 export const siteTitle = "Quincy's fake Next.js blog"
 
-export default function Layout({ children, home }) {
+interface LayoutProps {
+  children: React.ReactNode
+  home?: boolean
+}
+
+const Layout = ({ children, home }: LayoutProps) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -72,3 +78,5 @@ export default function Layout({ children, home }) {
     </div>
   )
 }
+
+export default Layout

@@ -1,13 +1,20 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import { FC } from 'react'
 import Layout, { siteTitle } from '../components/layout/layout'
 import utilStyles from '../styles/utils.module.css'
 import { getSortedPostsData } from '../lib/posts'
 import { getTodosFromJsonPlaceHolder } from '../lib/todos'
 import Date from '../components/date/date'
+import { GetStaticPaths, GetStaticProps, GetServerSideProps } from 'next'
 
-// Using the {} Syntax for object destructuring
-export default function Home({ allPostsData, todos20 }) {
+// Home Props
+interface HomeProps {
+  allPostsData: any
+  todos20: any
+}
+
+const Home = ({ allPostsData, todos20 }: HomeProps) => {
   // Also notice how utilstyles are going to be used in a similar fashion to tailwind.
 
   // Another thing to note is the use of the api thing
@@ -67,7 +74,7 @@ export default function Home({ allPostsData, todos20 }) {
 }
 
 // Remember each page function exports one of these, I've input code here because I need it to fetch the posts data to build the page
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async () => {
   // Fetch the posts using the function I defined in my library
   const allPostsData = getSortedPostsData()
 
@@ -82,3 +89,5 @@ export async function getStaticProps() {
     },
   }
 }
+
+export default Home

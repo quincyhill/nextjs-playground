@@ -1,7 +1,12 @@
 import styles from './alert.module.css'
 import cn from 'classnames'
 
-export default function Alert({ children, type }) {
+interface AlertProps {
+  children: React.ReactNode
+  type?: 'success' | 'info' | 'warning' | 'danger' | 'error'
+}
+
+const Alert = ({ children, type }: AlertProps) => {
   return (
     <div
       className={cn({
@@ -13,3 +18,5 @@ export default function Alert({ children, type }) {
     </div>
   )
 }
+
+export default Alert

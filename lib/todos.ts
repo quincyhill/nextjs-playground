@@ -4,7 +4,7 @@ export async function getTodosFromJsonPlaceHolder() {
   let allTodos = []
 
   // Return just 20 of them
-  let todos20 = []
+  let todos20: string[] = []
 
   /*
   const resopnse = await fetch('https://jsonplaceholder.typicode.com/todos')
