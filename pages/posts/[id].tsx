@@ -1,14 +1,37 @@
 import Layout from '../../components/layout/layout'
-import { getAllPostIds, getPostData } from '../../lib/posts'
+import { getAllPostIds, getPostData, Post } from '../../lib/posts'
 import Head from 'next/head'
 import Date from '../../components/date/date'
 import utilStyles from '../../styles/utils.module.css'
+import { GetStaticProps, GetStaticPaths } from 'next'
+import { ParsedUrlQuery } from 'querystring'
+
+interface PostPageProps {
+  postData: Post
+}
+
+// Both of these functions below run SERVER SIDE ONLY AND WONT BE INCLUDED ON THE BUILD just a note
+export const getStaticPaths: GetStaticPaths = async () => {
+  // Return a list of possible values for id, in this case its the title names of the markdown files
+  const paths = getAllPostIds()
+  return { paths, fallback: false }
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  // retrieve post data from the specific id eg (dog-water, ssg-ssr, etc...)
+  const postData = await getPostData(params.id)
+  return {
+    props: {
+      postData,
+    },
+  }
+}
 
 // Again using object unpacking / destructuring to get postData
-export default function Post({ postData }) {
+
+const PostPage = ({ postData }: PostPageProps) => {
   return (
     <Layout>
-      {/* Adds the head tag*/}
       <Head>
         <title>{postData.title}</title>
       </Head>
@@ -17,26 +40,13 @@ export default function Post({ postData }) {
         <div className={utilStyles.lightText}>
           <Date dateString={postData.date} />
         </div>
+        {/* 
         <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+        
+        */}
       </article>
     </Layout>
   )
 }
 
-// Both of these functions below run SERVER SIDE ONLY AND WONT BE INCLUDED ON THE BUILD just a note
-export async function getStaticPaths() {
-  // Return a list of possible values for id, in this case its the title names of the markdown files
-  const paths = getAllPostIds()
-  return { paths, fallback: false }
-}
-
-export async function getStaticProps({ params }) {
-  // Fetch necessary data for the blog post using params.id
-  // Await needed since getPostData is an async function
-  const postData = await getPostData(params.id)
-  return {
-    props: {
-      postData,
-    },
-  }
-}
+export default PostPage
