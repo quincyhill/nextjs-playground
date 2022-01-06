@@ -1,9 +1,9 @@
 // Remember this is now a dynamic site and I should pass in the name props
 import Head from 'next/head'
 import Link from 'next/link'
-import { NavLink } from '../../components/navlink'
+import { NavLink } from '../../components/NavLink'
 
-const Product = () => {
+const ProductPage = () => {
   function addProductJsonLd() {
     return {
       __html: `{
@@ -75,4 +75,4 @@ const Product = () => {
   )
 }
 
-export default Product
+export default ProductPage

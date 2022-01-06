@@ -1,11 +1,10 @@
-import Layout from '../../components/layout/layout'
+import Layout from '../../components/Layout/Layout'
 import { getAllPostIds, getPostData, Post, PostData } from '../../lib/posts'
 import Head from 'next/head'
-import Date from '../../components/date/date'
+import Date from '../../components/Date/Date'
 import utilStyles from '../../styles/utils.module.css'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { ParsedUrlQuery } from 'querystring'
-import { FC } from 'react'
 
 interface PostPageProps {
   postData: PostData

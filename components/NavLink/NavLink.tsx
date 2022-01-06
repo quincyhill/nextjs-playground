@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
-import s from './navlink.module.css'
+import s from './NavLink.module.css'
 
 interface NavLinkProps {
   href: string

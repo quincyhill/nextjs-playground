@@ -1,6 +1,6 @@
 import Head from 'next/head'
 
-const Tree = () => {
+const TreePage = () => {
   return (
     <div>
       <Head>
@@ -22,4 +22,4 @@ const Tree = () => {
   )
 }
 
-export default Tree
+export default TreePage

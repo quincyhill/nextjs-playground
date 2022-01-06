@@ -1,4 +1,4 @@
-import styles from './alert.module.css'
+import styles from './Alert.module.css'
 import cn from 'classnames'
 
 interface AlertProps {

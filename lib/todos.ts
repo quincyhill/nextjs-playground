@@ -11,7 +11,7 @@ export async function getTodosFromJsonPlaceHolder() {
   // Just create a fake list of todos, messing around using some weird map
 
   // Return a list of 20 todos
-  const todos20 = Array<number>(20)
+  const todos = Array<number>(20)
     .fill(0)
     .map(
       ({}, id) =>
@@ -30,5 +30,5 @@ export async function getTodosFromJsonPlaceHolder() {
   }
   */
 
-  return todos20
+  return todos
 }
