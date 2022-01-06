@@ -3,6 +3,18 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
+import { GetStaticPathsResult, GetStaticPropsResult } from 'next'
+
+// Post type
+export interface Post {
+  title: string
+  date: string
+  id?: string
+}
+
+export interface PostData extends Post {
+  contentHtml: string
+}
 
 // This library file in the library folder is for fetching posts
 
@@ -11,7 +23,7 @@ const postsDirectory = path.join(process.cwd(), 'posts')
 
 // Returns the posts data
 // For now this is only run at the index page
-export function getSortedPostsData() {
+export function getSortedPostsData(): Post[] {
   // NOTE: Consider using async await since i'm making calls out to the file system so there will be latency
   // But since this is just an example here it should work
   // Get file names under /posts
@@ -28,10 +40,10 @@ export function getSortedPostsData() {
     // Use gray-matter to parse the post metadata section
     const matterResult = matter(fileContents)
 
-    // Combine the data with the id, using destructuring
+    // Combine the data with the id, converts the matterResult.data into a Post type then destructures it and all is returned as a post
     return {
       id,
-      ...matterResult.data,
+      ...(matterResult.data as Post),
     }
   })
 
@@ -68,7 +80,6 @@ export function getAllPostIds() {
   //     }
   //   }
   // ]
-
   // Just like the json place holder example on the other I can call external API's here
 
   return fileNames.map((fileName) => {
@@ -81,7 +92,7 @@ export function getAllPostIds() {
   })
 }
 
-export async function getPostData(id) {
+export async function getPostData(id: string): Promise<PostData> {
   // Path of the markdown file
   const fullPath = path.join(postsDirectory, `${id}.md`)
 
@@ -95,12 +106,13 @@ export async function getPostData(id) {
   const processedContent = await remark()
     .use(html)
     .process(matterResult.content)
+
   const contentHtml = processedContent.toString()
 
   // Combine the data with the id
   return {
     id,
     contentHtml,
-    ...matterResult.data,
+    ...(matterResult.data as Post),
   }
 }
