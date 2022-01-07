@@ -19,7 +19,7 @@ const TodoCard = ({ todo, id }: TodoProps) => {
 
   return (
     <li
-      className="m-2 p-6 max-w-md mx-auto bg-yellow-200 hover:bg-yellow-100 rounded-xl shadow-lg flex items-center "
+      className="m-2 p-6 max-w-md mx-auto bg-yellow-200 rounded-xl shadow-lg flex items-center "
       key={id}
     >
       <div className=" flex items-center space-x-4">
@@ -40,11 +40,7 @@ const TodoCard = ({ todo, id }: TodoProps) => {
         </div>
       </div>
       <div className="flex-auto flex flex-row-reverse">
-        <TodoButton
-          className="bg-orange-300"
-          done={done}
-          handleDone={handleDone}
-        />
+        <TodoButton done={done} handleDone={handleDone} />
       </div>
     </li>
   )

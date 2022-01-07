@@ -3,24 +3,21 @@ import { BiCheckCircle, BiXCircle } from 'react-icons/bi'
 
 interface TodoButtonProps {
   done: boolean
-  className?: string
   handleDone: () => void
 }
 
-const TodoButton = ({ done, className, handleDone }: TodoButtonProps) => {
+const TodoButton = ({ done, handleDone }: TodoButtonProps) => {
   return (
     <button
       onClick={handleDone}
-      className={`${className} ${cn({
-        'text-white py-2 px-2 rounded': true,
-        'text-green-300': done,
-        'text-red-500': !done,
-      })}`}
+      className={
+        'p-2 rounded bg-orange-300 hover:bg-orange-200 active:bg-orange-600 focus:outline-none focus:ring focus:ring-violet-300'
+      }
     >
       {done ? (
-        <BiCheckCircle className="w-6 h-6" />
+        <BiCheckCircle className="w-6 h-6 text-green-500 " />
       ) : (
-        <BiXCircle className="w-6 h-6" />
+        <BiXCircle className="w-6 h-6 text-red-500" />
       )}
     </button>
   )

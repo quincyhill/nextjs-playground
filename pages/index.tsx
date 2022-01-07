@@ -10,6 +10,7 @@ import { Todo } from '../lib/todos'
 import { Post } from '../lib/posts'
 import { useState } from 'react'
 import { TodoContext } from '../lib/context'
+import { BiFolderPlus } from 'react-icons/bi'
 
 // Home Props
 interface HomeProps {
@@ -80,6 +81,44 @@ const HomePage = ({ posts, todos }: HomeProps) => {
             </li>
           ))}
         </ul>
+      </section>
+      <section>
+        <h2 className="text-center text-2xl">Testing form</h2>
+        <form className="m-4 max-w-4xl">
+          <label className="block">
+            <span className="block text-sm font-medium text-gray-700">
+              Username
+            </span>
+            <input
+              type="text"
+              value="stuff"
+              disabled
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
+      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+      disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:shadow-none
+      invalid:border-pink-500 invalid:text-pink-600
+      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+    "
+            />
+          </label>
+        </form>
+      </section>
+      <section>
+        <h2 className="text-center text-2xl">Group Test Card</h2>
+        <a
+          href="#main-footer"
+          className="group block max-w-xs mx-auto rounded-lg p-6 bg-whitering-1 ring-gray-900/5 shadow-lg space-y-3 hover:bg-sky-500 hover:ring-sky-500"
+        >
+          <div className="flex items-center space-x-3">
+            <BiFolderPlus className="h-6 w-6 text-sky-500 group-hover:text-white" />
+            <h3 className="text-gray-900 group-hover:text-white text-sm font-semibold">
+              New project
+            </h3>
+          </div>
+          <p className="text-gray-500 group-hover:text-white text-sm">
+            Create a new project from a variety of starting templates.
+          </p>
+        </a>
       </section>
       <section className="p-1">
         <h2 className="text-center text-2xl">Todos</h2>

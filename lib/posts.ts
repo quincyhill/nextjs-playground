@@ -3,7 +3,6 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
-import { GetStaticPathsResult, GetStaticPropsResult } from 'next'
 
 // Post type
 export interface Post {

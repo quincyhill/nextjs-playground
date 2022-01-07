@@ -9,8 +9,8 @@ const Alert = ({ children, type }: AlertProps) => {
   return (
     <div
       className={cn({
-        ['text-green-500']: type === 'success',
-        ['text-red-500']: type === 'error',
+        'text-green-500': type === 'success',
+        'text-red-500': type === 'error',
       })}
     >
       {children}

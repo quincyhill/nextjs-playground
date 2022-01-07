@@ -74,6 +74,9 @@ const Layout = ({ children, home }: LayoutProps) => {
             </Link>
           </div>
         )}
+        <footer id="main-footer">
+          <h2 className="font-medium text-center">Made by me</h2>
+        </footer>
       </div>
     </div>
   )
