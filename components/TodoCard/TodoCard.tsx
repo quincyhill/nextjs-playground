@@ -1,7 +1,7 @@
 import { Todo } from '../../lib/todos'
 import { TodoButton } from '../TodoButton'
 import { useState } from 'react'
-import s from './TodoCard.module.css'
+import Image from 'next/image'
 
 interface TodoProps {
   todo: Todo
@@ -16,15 +16,34 @@ const TodoCard = ({ todo, id }: TodoProps) => {
   }
 
   return (
-    <li className="bg-blue-300 rounded-lg p-2 m-1 shadow-sm" key={id}>
-      <div className="flex justify-center font-bold">{todo.title}</div>
-      <br />
-      <div className="flex justify-center">{String(done)}</div>
-      <TodoButton
-        className="flex justify-center p-3"
-        done={done}
-        handleDone={handleDone}
-      />
+    <li
+      className="m-2 p-6 max-w-md mx-auto bg-yellow-200 rounded-xl shadow-lg flex items-center space-x-4"
+      key={id}
+    >
+      <div className=" flex items-center space-x-4">
+        <div className="shrink-0 ">
+          <Image
+            src="/images/profile.jpg"
+            alt="Generic Logo"
+            width={48}
+            height={48}
+            className="rounded-md"
+          />
+        </div>
+        <div>
+          <div className="text-xl font-medium text-black">{todo.title}</div>
+          <p className="text-gray-500">
+            {done ? 'Completed' : 'Not Completed'}
+          </p>
+        </div>
+      </div>
+      <div className="flex-auto flex flex-row-reverse">
+        <TodoButton
+          className="bg-orange-300"
+          done={done}
+          handleDone={handleDone}
+        />
+      </div>
     </li>
   )
 }

@@ -1,4 +1,0 @@
-.btn {
-  @apply border-4 border-indigo-600;
-  background-color: theme('colors.primary');
-}

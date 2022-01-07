@@ -1,6 +1,5 @@
-import { FC, Component } from 'react'
 import cn from 'classnames'
-import s from './TodoButton.module.css'
+import { BiCheckCircle, BiXCircle } from 'react-icons/bi'
 
 interface TodoButtonProps {
   done: boolean
@@ -8,23 +7,22 @@ interface TodoButtonProps {
   handleDone: () => void
 }
 
-const TodoButton: FC<TodoButtonProps> = ({
-  done,
-  className,
-  handleDone,
-}: TodoButtonProps) => {
+const TodoButton = ({ done, className, handleDone }: TodoButtonProps) => {
   return (
-    <div className={className}>
-      <button
-        onClick={handleDone}
-        className={`${s.btn} ${cn({
-          'text-white font-bold py-2 px-4 rounded': true,
-          'text-gray-300': done,
-        })}`}
-      >
-        {done ? 'Done' : 'Not done'}
-      </button>
-    </div>
+    <button
+      onClick={handleDone}
+      className={`${className} ${cn({
+        'text-white py-2 px-2 rounded': true,
+        'text-green-300': done,
+        'text-red-500': !done,
+      })}`}
+    >
+      {done ? (
+        <BiCheckCircle className="w-6 h-6" />
+      ) : (
+        <BiXCircle className="w-6 h-6" />
+      )}
+    </button>
   )
 }
 
