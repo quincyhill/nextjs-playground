@@ -1,4 +1,3 @@
-import styles from './Alert.module.css'
 import cn from 'classnames'
 
 interface AlertProps {
@@ -10,8 +9,8 @@ const Alert = ({ children, type }: AlertProps) => {
   return (
     <div
       className={cn({
-        [styles.success]: type === 'success',
-        [styles.error]: type === 'error',
+        ['text-green-500']: type === 'success',
+        ['text-red-500']: type === 'error',
       })}
     >
       {children}

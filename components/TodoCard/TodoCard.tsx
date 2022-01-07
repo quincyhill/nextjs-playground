@@ -1,4 +1,6 @@
 import { Todo } from '../../lib/todos'
+import { useContext } from 'react'
+import { TodoContext } from '../../lib/context'
 import { TodoButton } from '../TodoButton'
 import { useState } from 'react'
 import Image from 'next/image'
@@ -17,7 +19,7 @@ const TodoCard = ({ todo, id }: TodoProps) => {
 
   return (
     <li
-      className="m-2 p-6 max-w-md mx-auto bg-yellow-200 rounded-xl shadow-lg flex items-center space-x-4"
+      className="m-2 p-6 max-w-md mx-auto bg-yellow-200 hover:bg-yellow-100 rounded-xl shadow-lg flex items-center "
       key={id}
     >
       <div className=" flex items-center space-x-4">
@@ -32,9 +34,9 @@ const TodoCard = ({ todo, id }: TodoProps) => {
         </div>
         <div>
           <div className="text-xl font-medium text-black">{todo.title}</div>
-          <p className="text-gray-500">
+          <small className="text-gray-500">
             {done ? 'Completed' : 'Not Completed'}
-          </p>
+          </small>
         </div>
       </div>
       <div className="flex-auto flex flex-row-reverse">

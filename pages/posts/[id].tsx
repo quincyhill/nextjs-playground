@@ -2,7 +2,6 @@ import Layout from '../../components/Layout/Layout'
 import { getAllPostIds, getPostData, Post, PostData } from '../../lib/posts'
 import Head from 'next/head'
 import Date from '../../components/Date/Date'
-import utilStyles from '../../styles/utils.module.css'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 
@@ -42,10 +41,10 @@ const PostPage = ({ postData }: PostPageProps) => {
         <title>{postData.title}</title>
       </Head>
       <article>
-        <h1 className={utilStyles.headingXl}>{postData.title}</h1>
-        <div className={utilStyles.lightText}>
+        <h1 className="text-4xl font-bold">{postData.title}</h1>
+        <small className="text-gray-500">
           <Date dateString={postData.date} />
-        </div>
+        </small>
         <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
       </article>
     </Layout>
