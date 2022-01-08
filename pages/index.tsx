@@ -1,8 +1,14 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import Image from 'next/image'
 import Layout, { siteTitle } from '../components/Layout/Layout'
+import { HoverTestCard } from '../components/HoverTestCard'
+import { CustomForm } from '../components/CustomForm'
+import { DropDownCard } from '../components/DropDownCard'
+import { ResponsiveCard } from '../components/ResponsiveCard'
+import { ThemedCard } from '../components/ThemedCard'
+import { CustomBlockQuote } from '../components/CustomBlockQuote'
 import { TodoCard } from '../components/TodoCard'
+import { CustomSearch } from '../components/CustomSearch'
 import { getSortedPostsData } from '../lib/posts'
 import { getTodosFromJsonPlaceHolder } from '../lib/todos'
 import Date from '../components/Date/Date'
@@ -17,19 +23,10 @@ import {
   useMemo,
   useCallback,
   useImperativeHandle,
-  forwardRef,
   RefObject,
   useLayoutEffect,
-  useDebugValue,
 } from 'react'
-import { TodoContext } from '../lib/context'
 import { useDisplayName } from '../lib/hooks/useDisplayName'
-import {
-  FolderPlus as BiFolderPlus,
-  Search as BiSearch,
-  Pencil as BiPencil,
-} from 'react-bootstrap-icons'
-import { ThemeSwitcher } from '../components/ThemeSwitcher'
 
 // Home Props
 interface HomeProps {
@@ -173,7 +170,6 @@ const HomePage = ({ posts, todos }: HomeProps) => {
         <br />
         <button ref={andAgainAnotherRef}>Full send</button>
         <br />
-        <ThemeSwitcher />
       </section>
       <section className="p-1">
         <h2 className="text-2xl p-6 font-bold">Blog</h2>
@@ -192,172 +188,45 @@ const HomePage = ({ posts, todos }: HomeProps) => {
         </ul>
       </section>
       <section>
-        <h2 className="text-center text-2xl font-bold">Testing form</h2>
-        <form className="m-4 max-w-4xl">
-          <label className="block">
-            <span className="block text-sm font-medium text-gray-700">
-              Username
-            </span>
-            <input
-              type="text"
-              value="stuff"
-              disabled
-              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500
-    "
-            />
-          </label>
-          <label className="block">
-            <span className="block text-sm font-medium text-gray-700">
-              Email
-            </span>
-            <input
-              type="email"
-              className="peer mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400
-      focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-      disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-200 disabled:shadow-none
-      invalid:border-pink-500 invalid:text-pink-600
-      focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
-            />
-            <p className="mt-2 invisible peer-invalid:visible text-pink-600 text-sm">
-              Please provide a valid email address
-            </p>
-          </label>
-          <label className="block">
-            <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-gray-700">
-              Second Email
-            </span>
-            <input
-              type="email"
-              name="email"
-              className="mt-1 px-3 py-2 bg-white border shadow-sm border-gray-300 placeholder-gray-400 focus:outline-none focus:border-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
-              placeholder="you@example.com"
-            />
-          </label>
-        </form>
+        <h2 className="m-4 text-center text-2xl font-bold">Testing form</h2>
+        <CustomForm />
       </section>
       <section>
-        <h2 className="text-center text-2xl font-bold">Some words my guy</h2>
-        <blockquote className="text-2xl font-semibold italic text-center text-gray-900">
-          When you look
-          <span className="relative mx-2">
-            <span
-              className="block absolute -inset-1 -skew-y-3 bg-pink-500"
-              aria-hidden="true"
-            ></span>
-            <span className="relative text-white">annoyed</span>
-          </span>
-          all the time, people think that you're busy.
-        </blockquote>
+        <h2 className="m-4 ktext-center text-2xl font-bold">Some words</h2>
+        <CustomBlockQuote />
       </section>
       <section>
-        <h2 className="text-center text-2xl font-bold">Search Input</h2>
-        <label className="relative block">
-          <span className="sr-only">Search</span>
-          <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-            <BiSearch className="h-5 w-5 text-gray-300" />
-          </span>
-          <input
-            className="placeholder:italic placeholder:text-gray-400 block bg-white w-full border border-gray-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
-            placeholder="Search for anything"
-          />
-        </label>
+        <h2 className="m-4 text-center text-2xl font-bold">Search Input</h2>
+        <CustomSearch />
       </section>
       <section>
-        <h2 className="text-center text-2xl font-bold">Group Test Card</h2>
-        <a
-          href="#main-footer"
-          className="group block max-w-xs mx-auto rounded-lg p-6 bg-whitering-1 ring-gray-900/5 shadow-lg space-y-3 bg-white hover:bg-sky-500 hover:ring-sky-500"
-        >
-          <div className="flex items-center space-x-3">
-            <BiFolderPlus className="h-6 w-6 text-sky-500 group-hover:text-white" />
-            <h3 className="text-gray-900 group-hover:text-white text-sm font-semibold">
-              New project
-            </h3>
-          </div>
-          <p className="text-gray-500 group-hover:text-white text-sm">
-            Create a new project from a variety of starting templates.
-          </p>
-        </a>
+        <h2 className="m-4 text-center text-2xl font-bold">Group Test Card</h2>
+        <HoverTestCard />
         <br />
-        <div className="max-w-lg mx-auto p-8">
-          <details
-            className="open:bg-white dark:open:bg-gray-900 open:ring-1 open:ring-black/5 dark:open:ring-white/10 open:shadow-lg p-6 rounded-lg"
-            open
-          >
-            <summary className="text-sm leading-6 text-gray-900 dark:text-white font-semibold select-none">
-              Why do they call it Ovaltine?
-            </summary>
-            <div className="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-400">
-              <p>
-                The mug is round. The jar is round. They should call it
-                Roundtine.
-              </p>
-            </div>
-          </details>
-        </div>
+        <DropDownCard />
       </section>
       <section>
-        <h2 className="text-center font-bold text-2xl">Responsive Design</h2>
-        <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
-          <div className="md:flex">
-            <div className="md:shrink-0">
-              <Image
-                src="/images/building.jpg"
-                width={192}
-                height={192}
-                className="h-48 w-full object-cover md:h-full md:w-48"
-                alt="Building at night"
-              />
-            </div>
-            <div className="p-8">
-              <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
-                Case study
-              </div>
-              <a
-                href="#"
-                className="block mt-1 text-lg leading-tight font-medium text-black hover:underline"
-              >
-                Finding customers for your new business
-              </a>
-              <p className="mt-2 text-gray-500">
-                Getting a new business off the ground is a lot of hard work.
-                Here are five ideas you can use to find your first customers.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white dark:bg-gray-900 rounded-lg px-6 py-8 ring-1 ring-gray-900/5 shadow-xl">
-          <div>
-            <span className="inline-flex items-center justify-center p-2 bg-indigo-500 rounded-md shadow-lg">
-              <BiPencil className="h-6 w-6 text-white" />
-            </span>
-          </div>
-          <h3 className="text-gray-900 dark:text-white mt-5 text-base font-medium tracking-tight">
-            Writes Upside-Down
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm">
-            The Zero Gravity Pen can be used to write in any orientation,
-            including upside-down. It even works in outer space.
-          </p>
-        </div>
+        <h2 className="m-4 text-center font-bold text-2xl">
+          Responsive Design
+        </h2>
+        <ResponsiveCard />
+        <br />
+        <ThemedCard />
+      </section>
+      <section>
+        <h2 className="m-4 text-center text-2xl font-bold">Nice Login</h2>
       </section>
       <section className="p-1">
-        <h2 className="text-center text-2xl font-bold">Todos</h2>
-        <TodoContext.Provider value={myTodos}>
-          <ul className="list-none">
-            {myTodos.map((todo, id) => (
-              <TodoCard todo={todo} id={id} />
-            ))}
-            <hr />
-            {todos.map((todo, id) => (
-              <TodoCard todo={todo} id={id} />
-            ))}
-          </ul>
-        </TodoContext.Provider>
+        <h2 className="m-4 text-center text-2xl font-bold">Todos</h2>
+        <ul className="list-none">
+          {myTodos.map((todo, id) => (
+            <TodoCard todo={todo} id={id} />
+          ))}
+          <hr />
+          {todos.map((todo, id) => (
+            <TodoCard todo={todo} id={id} />
+          ))}
+        </ul>
       </section>
     </Layout>
   )

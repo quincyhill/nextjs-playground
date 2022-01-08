@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import { ThemeSwitcher } from '../ThemeSwitcher'
 
 const name = 'Quincy Hill'
 export const siteTitle = "Quincy's fake Next.js blog"
@@ -13,7 +14,7 @@ interface LayoutProps {
 
 const Layout = ({ children, home }: LayoutProps) => {
   return (
-    <div className="flex justify-center bg-gray-50">
+    <div className="flex justify-center bg-gray-50 dark">
       <div className="max-w-2xl p-0 m-0 ">
         <Head>
           <link rel="icon" href="/favicon.ico" />
@@ -65,6 +66,7 @@ const Layout = ({ children, home }: LayoutProps) => {
               </h2>
             </>
           )}
+          <ThemeSwitcher />
         </header>
         <main>{children}</main>
         {!home && (
