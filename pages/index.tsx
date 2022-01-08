@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import Image from 'next/image'
 import Layout, { siteTitle } from '../components/Layout/Layout'
 import { TodoCard } from '../components/TodoCard'
 import { getSortedPostsData } from '../lib/posts'
@@ -8,9 +9,27 @@ import Date from '../components/Date/Date'
 import { GetStaticProps } from 'next'
 import { Todo } from '../lib/todos'
 import { Post } from '../lib/posts'
-import { useState } from 'react'
+import {
+  useEffect,
+  useState,
+  useRef,
+  useReducer,
+  useMemo,
+  useCallback,
+  useImperativeHandle,
+  forwardRef,
+  RefObject,
+  useLayoutEffect,
+  useDebugValue,
+} from 'react'
 import { TodoContext } from '../lib/context'
-import { BiFolderPlus, BiSearch } from 'react-icons/bi'
+import { useDisplayName } from '../lib/hooks/useDisplayName'
+import {
+  FolderPlus as BiFolderPlus,
+  Search as BiSearch,
+  Pencil as BiPencil,
+} from 'react-bootstrap-icons'
+import { ThemeSwitcher } from '../components/ThemeSwitcher'
 
 // Home Props
 interface HomeProps {
@@ -35,6 +54,22 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 }
 
+interface CoolButtonProps {
+  ref: RefObject<HTMLElement | void>
+}
+
+let CoolButton = ({ ref }: CoolButtonProps) => {
+  const myBtn = useRef<HTMLButtonElement>(null)
+
+  const displayName = useDisplayName({ userId: 4 })
+
+  useImperativeHandle(ref, () => {
+    console.log('Clicking button!')
+    myBtn.current?.click()
+  })
+  return <button ref={myBtn}>ImCool:{displayName}</button>
+}
+
 const HomePage = ({ posts, todos }: HomeProps) => {
   // Also notice how utilstyles are going to be used in a similar fashion to tailwind.
   //
@@ -42,6 +77,67 @@ const HomePage = ({ posts, todos }: HomeProps) => {
 
   // User generated todos
   const [myTodos, setMyTodos] = useState<Todo[]>([testTodo])
+
+  // Test count dealing with state withing a component
+  const [count, setCount] = useState(0)
+
+  // Use effect to run on mount
+  useEffect(() => {
+    console.log('useState called')
+  }, [])
+
+  // Using use ref to allow the button to reference the input on click
+  const inputEl = useRef<HTMLInputElement>(null)
+
+  const onButtonClick = () => {
+    // `current` points to the element you're in
+    inputEl.current?.focus()
+  }
+
+  // Using useReducer
+
+  const reducer = (state: number, action: { type: string }) => {
+    switch (action.type) {
+      case 'increment':
+        return state + 1
+      case 'decrement':
+        return state - 1
+      default:
+        throw new Error()
+    }
+  }
+
+  // State i'm affecting
+  const [someState, dispatch] = useReducer(reducer, 0)
+
+  // Next up is memoization, which is a way to cache the result of return values
+  const [anotherCount, setAnotherCount] = useState(60)
+
+  const expensiveCount = useMemo(() => {
+    return count ** 2
+  }, [anotherCount])
+
+  // This is to memoize functions
+  // This can be applied when I pass this function down to multiple child components
+  // It will prevent unnecessary re-renders
+
+  const showAnotherCount = useCallback(() => {
+    alert(`Count ${anotherCount}`)
+  }, [anotherCount])
+
+  // Lets do another ref
+  const anotherRef = useRef<HTMLInputElement>(null)
+
+  // Testing out useLayoutEffect
+
+  const andAgainAnotherRef = useRef<HTMLButtonElement>(null)
+
+  useLayoutEffect(() => {
+    const rect = andAgainAnotherRef.current?.getBoundingClientRect()
+    console.log('Rect height for Full Send: ', rect?.height)
+  })
+
+  // Finally useDebugValue
 
   // Another thing to note is the use of the api thing
   return (
@@ -65,9 +161,22 @@ const HomePage = ({ posts, todos }: HomeProps) => {
           (This is a sample website - you’ll be building a site like this on{' '}
           <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
         </p>
+        <br />
+        <input ref={inputEl} type="text" />
+        <button onClick={onButtonClick}>Click me {count}</button>
+        <br />
+        <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
+        <button onClick={() => dispatch({ type: 'increment' })}>+</button>
+        <p>Value of Some State: {someState}</p>
+        <br />
+        <CoolButton ref={anotherRef} />
+        <br />
+        <button ref={andAgainAnotherRef}>Full send</button>
+        <br />
+        <ThemeSwitcher />
       </section>
       <section className="p-1">
-        <h2 className="text-2xl p-6">Blog</h2>
+        <h2 className="text-2xl p-6 font-bold">Blog</h2>
         <ul className="list-none">
           {posts.map(({ id, date, title }, keyId) => (
             <li className="m-2 p-4" key={keyId}>
@@ -83,7 +192,7 @@ const HomePage = ({ posts, todos }: HomeProps) => {
         </ul>
       </section>
       <section>
-        <h2 className="text-center text-2xl">Testing form</h2>
+        <h2 className="text-center text-2xl font-bold">Testing form</h2>
         <form className="m-4 max-w-4xl">
           <label className="block">
             <span className="block text-sm font-medium text-gray-700">
@@ -131,7 +240,7 @@ const HomePage = ({ posts, todos }: HomeProps) => {
         </form>
       </section>
       <section>
-        <h2 className="text-center text-2xl">Some words my guy</h2>
+        <h2 className="text-center text-2xl font-bold">Some words my guy</h2>
         <blockquote className="text-2xl font-semibold italic text-center text-gray-900">
           When you look
           <span className="relative mx-2">
@@ -145,7 +254,7 @@ const HomePage = ({ posts, todos }: HomeProps) => {
         </blockquote>
       </section>
       <section>
-        <h2 className="text-center text-2xl">Search Input</h2>
+        <h2 className="text-center text-2xl font-bold">Search Input</h2>
         <label className="relative block">
           <span className="sr-only">Search</span>
           <span className="absolute inset-y-0 left-0 flex items-center pl-2">
@@ -158,7 +267,7 @@ const HomePage = ({ posts, todos }: HomeProps) => {
         </label>
       </section>
       <section>
-        <h2 className="text-center text-2xl">Group Test Card</h2>
+        <h2 className="text-center text-2xl font-bold">Group Test Card</h2>
         <a
           href="#main-footer"
           className="group block max-w-xs mx-auto rounded-lg p-6 bg-whitering-1 ring-gray-900/5 shadow-lg space-y-3 bg-white hover:bg-sky-500 hover:ring-sky-500"
@@ -191,8 +300,53 @@ const HomePage = ({ posts, todos }: HomeProps) => {
           </details>
         </div>
       </section>
+      <section>
+        <h2 className="text-center font-bold text-2xl">Responsive Design</h2>
+        <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+          <div className="md:flex">
+            <div className="md:shrink-0">
+              <Image
+                src="/images/building.jpg"
+                width={192}
+                height={192}
+                className="h-48 w-full object-cover md:h-full md:w-48"
+                alt="Building at night"
+              />
+            </div>
+            <div className="p-8">
+              <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
+                Case study
+              </div>
+              <a
+                href="#"
+                className="block mt-1 text-lg leading-tight font-medium text-black hover:underline"
+              >
+                Finding customers for your new business
+              </a>
+              <p className="mt-2 text-gray-500">
+                Getting a new business off the ground is a lot of hard work.
+                Here are five ideas you can use to find your first customers.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white dark:bg-gray-900 rounded-lg px-6 py-8 ring-1 ring-gray-900/5 shadow-xl">
+          <div>
+            <span className="inline-flex items-center justify-center p-2 bg-indigo-500 rounded-md shadow-lg">
+              <BiPencil className="h-6 w-6 text-white" />
+            </span>
+          </div>
+          <h3 className="text-gray-900 dark:text-white mt-5 text-base font-medium tracking-tight">
+            Writes Upside-Down
+          </h3>
+          <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm">
+            The Zero Gravity Pen can be used to write in any orientation,
+            including upside-down. It even works in outer space.
+          </p>
+        </div>
+      </section>
       <section className="p-1">
-        <h2 className="text-center text-2xl">Todos</h2>
+        <h2 className="text-center text-2xl font-bold">Todos</h2>
         <TodoContext.Provider value={myTodos}>
           <ul className="list-none">
             {myTodos.map((todo, id) => (

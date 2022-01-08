@@ -1,5 +1,8 @@
 import cn from 'classnames'
-import { BiCheckCircle, BiXCircle } from 'react-icons/bi'
+import {
+  CheckCircle as BiCheckCircle,
+  XCircle as BiXCircle,
+} from 'react-bootstrap-icons'
 
 interface TodoButtonProps {
   done: boolean
