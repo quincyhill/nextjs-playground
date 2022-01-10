@@ -9,9 +9,13 @@ interface TransactionItemProps {
 }
 
 const TransactionItem = ({ transaction }: TransactionItemProps) => {
-  const { deleteTransaction } = useContext(GlobalContext)
+  const { dispatch } = useContext(GlobalContext)
   const { text, amount, id } = transaction
   const sign = amount < 0 ? '-' : '+'
+
+  const handleClick = (id: number) => {
+    dispatch({ type: 'DELETE_TRANSACTION', payload: id })
+  }
 
   return (
     <div>
@@ -26,7 +30,7 @@ const TransactionItem = ({ transaction }: TransactionItemProps) => {
           {sign} {`\$${Math.abs(amount)}`}
           <button
             onClick={() => {
-              deleteTransaction(id)
+              handleClick(id)
             }}
             className="p-1 bg-red-500 rounded-sm text-black "
           >

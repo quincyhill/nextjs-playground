@@ -1,7 +1,4 @@
-import React, { createContext, useReducer } from 'react'
-import AppReducer from './AppReducer'
-import Action from './AppReducer'
-
+import React, { createContext, useReducer, Dispatch } from 'react'
 export interface Transaction {
   id: number
   text: string
@@ -10,7 +7,6 @@ export interface Transaction {
 
 export interface GlobalState {
   transactions: Transaction[]
-  deleteTransaction: (id: number) => void
 }
 
 // Initial state
@@ -22,12 +18,45 @@ const initialState: GlobalState = {
     { id: 3, text: 'Book', amount: -10 },
     { id: 4, text: 'Camera', amount: 150 },
   ],
-  // This feels wrong but it works so I'm not going to change it for now...
-  deleteTransaction: (id: number) => {},
+}
+
+export interface AddTransactionAction {
+  type: 'ADD_TRANSACTION'
+  payload: Transaction
+}
+
+export interface DeleteTransactionAction {
+  type: 'DELETE_TRANSACTION'
+  payload: number
+}
+
+type Actions = AddTransactionAction | DeleteTransactionAction
+
+export const reducer = (state: GlobalState, action: Actions) => {
+  switch (action.type) {
+    case 'ADD_TRANSACTION':
+      return {
+        ...state,
+        transactions: [action.payload, ...state.transactions],
+      }
+    case 'DELETE_TRANSACTION':
+      return {
+        ...state,
+        transactions: state.transactions.filter(
+          (transaction) => transaction.id !== action.payload
+        ),
+      }
+    default:
+      return state
+  }
 }
 
 // Create global context
-export const GlobalContext = createContext<GlobalState>(initialState)
+// This was mainly the bug preventing the dispatch to be called
+export const GlobalContext = createContext<{
+  state: GlobalState
+  dispatch: Dispatch<Actions>
+}>({ state: initialState, dispatch: () => null })
 
 // Provider component
 
@@ -37,7 +66,7 @@ interface GlobalProviderProps {
 
 // Provider component
 export const GlobalProvider = ({ children }: GlobalProviderProps) => {
-  const [state, dispatch] = useReducer(AppReducer, initialState)
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   const deleteTransaction = (id: number) => {
     dispatch({
@@ -46,10 +75,12 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
     })
   }
 
+  const addTransaction = (transaction: Transaction) => {
+    dispatch({ type: 'ADD_TRANSACTION', payload: transaction })
+  }
+
   return (
-    <GlobalContext.Provider
-      value={{ transactions: state.transactions, deleteTransaction }}
-    >
+    <GlobalContext.Provider value={{ state, dispatch }}>
       {children}
     </GlobalContext.Provider>
   )
