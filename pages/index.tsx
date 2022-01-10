@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import Layout, { siteTitle } from '../components/Layout/Layout'
 import { HoverTestCard } from '../components/HoverTestCard'
 import { CustomForm } from '../components/CustomForm'
@@ -9,9 +8,10 @@ import { ThemedCard } from '../components/ThemedCard'
 import { CustomBlockQuote } from '../components/CustomBlockQuote'
 import { TodoCard } from '../components/TodoCard'
 import { CustomSearch } from '../components/CustomSearch'
+import { ExpenseTracker } from '../components/ExpenseTracker'
+import { PostCard } from '../components/PostCard'
 import { getSortedPostsData } from '../lib/posts'
 import { getTodosFromJsonPlaceHolder } from '../lib/todos'
-import Date from '../components/Date/Date'
 import { GetStaticProps } from 'next'
 import { Todo } from '../lib/todos'
 import { Post } from '../lib/posts'
@@ -175,17 +175,13 @@ const HomePage = ({ posts, todos }: HomeProps) => {
         <h2 className="text-2xl p-6 font-bold">Blog</h2>
         <ul className="list-none">
           {posts.map(({ id, date, title }, keyId) => (
-            <li className="m-2 p-4" key={keyId}>
-              <Link href={`/posts/${id}`}>
-                <a>{title}</a>
-              </Link>
-              <br />
-              <small className="text-gray-500">
-                <Date dateString={date} />
-              </small>
-            </li>
+            <PostCard id={id} date={date} title={title} keyId={keyId} />
           ))}
         </ul>
+      </section>
+      <section>
+        <h2 className="m-4 text-center text-2xl font-bold">Expense Tracker</h2>
+        <ExpenseTracker />
       </section>
       <section>
         <h2 className="m-4 text-center text-2xl font-bold">Testing form</h2>
