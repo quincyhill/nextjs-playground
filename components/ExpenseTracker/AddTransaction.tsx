@@ -1,20 +1,33 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
-
-interface Inputs {
-  text: string
-  amount: number
-}
+import { GlobalContext, Transaction } from '../../lib/context/GlobalState'
 
 export const AddTransaction = () => {
+  const { state, dispatch } = useContext(GlobalContext)
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>()
+  } = useForm<Transaction>()
 
-  const onFormSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+  const onFormSubmit: SubmitHandler<Transaction> = (data: Transaction) => {
+    // I shouldnt have to do this since I'm passing in the correct Transaction type
+    // Amount should be a number but I'm getting a string, need to check up on docs
+
+    const amountStr: string = data.amount.toString()
+    const myAmount: number = parseInt(amountStr)
+
+    dispatch({
+      type: 'ADD_TRANSACTION',
+      payload: {
+        amount: myAmount,
+        text: data.text,
+        id: state.numCreatedTransactions + 1,
+      },
+    })
+  }
 
   // watch allows us to watch the form state of the inputs
   console.log(watch('text'))

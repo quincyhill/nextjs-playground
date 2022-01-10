@@ -13,8 +13,8 @@ export const TransactionList = () => {
       <p className="font-bold my-2">History</p>
       <hr />
       <ul>
-        {transactions.map((transaction) => (
-          <TransactionItem transaction={transaction} />
+        {transactions.map((transaction, keyId) => (
+          <TransactionItem transaction={transaction} key={keyId} />
         ))}
       </ul>
     </div>

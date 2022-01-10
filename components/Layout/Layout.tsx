@@ -14,8 +14,8 @@ interface LayoutProps {
 
 const Layout = ({ children, home }: LayoutProps) => {
   return (
-    <div className="flex justify-center bg-gray-50 dark">
-      <div className="max-w-2xl p-0 m-0 ">
+    <div className="flex justify-center bg-gray-100 dark">
+      <div className="max-w-4xl p-0 m-0 ">
         <Head>
           <link rel="icon" href="/favicon.ico" />
           <meta

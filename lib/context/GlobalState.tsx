@@ -7,6 +7,8 @@ export interface Transaction {
 
 export interface GlobalState {
   transactions: Transaction[]
+  numCreatedTransactions: number
+  numDeletedTransactions: number
 }
 
 // Initial state
@@ -18,6 +20,8 @@ const initialState: GlobalState = {
     { id: 3, text: 'Book', amount: -10 },
     { id: 4, text: 'Camera', amount: 150 },
   ],
+  numCreatedTransactions: 4,
+  numDeletedTransactions: 0,
 }
 
 export interface AddTransactionAction {
@@ -38,6 +42,7 @@ export const reducer = (state: GlobalState, action: Actions) => {
       return {
         ...state,
         transactions: [action.payload, ...state.transactions],
+        numCreatedTransactions: state.numCreatedTransactions + 1,
       }
     case 'DELETE_TRANSACTION':
       return {
@@ -45,6 +50,7 @@ export const reducer = (state: GlobalState, action: Actions) => {
         transactions: state.transactions.filter(
           (transaction) => transaction.id !== action.payload
         ),
+        numDeletedTransactions: state.numDeletedTransactions + 1,
       }
     default:
       return state

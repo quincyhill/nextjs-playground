@@ -6,9 +6,10 @@ import { X as BiX } from 'react-bootstrap-icons'
 
 interface TransactionItemProps {
   transaction: Transaction
+  key: number
 }
 
-const TransactionItem = ({ transaction }: TransactionItemProps) => {
+const TransactionItem = ({ transaction, key }: TransactionItemProps) => {
   const { dispatch } = useContext(GlobalContext)
   const { text, amount, id } = transaction
   const sign = amount < 0 ? '-' : '+'
@@ -18,7 +19,7 @@ const TransactionItem = ({ transaction }: TransactionItemProps) => {
   }
 
   return (
-    <div>
+    <div key={key}>
       <li className="p-2 flex justify-between bg-white shadow-md">
         <p>{text}</p>
         <span

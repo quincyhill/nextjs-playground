@@ -6,7 +6,7 @@ import AddTransaction from './AddTransaction'
 
 const ExpenseTracker = () => {
   return (
-    <div className="flex flex-col bg-orange-100 ">
+    <div className="flex flex-col">
       <Balance />
       <IncomeExpenses />
       <TransactionList />

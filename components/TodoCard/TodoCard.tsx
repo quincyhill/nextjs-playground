@@ -19,7 +19,7 @@ const TodoCard = ({ todo, id }: TodoProps) => {
 
   return (
     <li
-      className="m-2 p-6 max-w-md mx-auto bg-yellow-200 rounded-xl shadow-lg flex items-center "
+      className="m-2 p-6 max-w-md mx-auto bg-white rounded-xl shadow-lg flex items-center "
       key={id}
     >
       <div className=" flex items-center space-x-4">
