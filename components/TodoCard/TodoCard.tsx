@@ -1,16 +1,15 @@
 import { Todo } from '../../lib/todos'
-import { useContext } from 'react'
-import { TodoContext } from '../../lib/context'
 import { TodoButton } from '../TodoButton'
 import { useState } from 'react'
 import Image from 'next/image'
+import { Draggable } from 'react-beautiful-dnd'
 
 interface TodoProps {
   todo: Todo
-  id: number
+  key: number
 }
 
-const TodoCard = ({ todo, id }: TodoProps) => {
+const TodoCard = ({ todo, key }: TodoProps) => {
   const [done, setDone] = useState(todo.completed)
 
   const handleDone = () => {
@@ -20,11 +19,11 @@ const TodoCard = ({ todo, id }: TodoProps) => {
   return (
     <li
       className="m-2 p-6 max-w-md mx-auto bg-white rounded-xl shadow-lg flex items-center "
-      key={id}
+      key={key}
     >
       <div className=" flex items-center space-x-4">
         <div className="shrink-0 ">
-          <Image
+          <img
             src="/images/profile.jpg"
             alt="Generic Logo"
             width={48}

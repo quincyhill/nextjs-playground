@@ -184,6 +184,14 @@ const HomePage = ({ posts, todos }: HomeProps) => {
             ))}
           </ul>
         </section>
+        <section className="p-1">
+          <h2 className="m-4 text-center text-2xl font-bold">Todos</h2>
+          <ul className="list-none">
+            {todos.map((todo, keyId) => (
+              <TodoCard todo={todo} key={keyId} />
+            ))}
+          </ul>
+        </section>
         <section>
           <h2 className="m-4 text-center text-2xl font-bold">
             Expense Tracker
@@ -225,18 +233,6 @@ const HomePage = ({ posts, todos }: HomeProps) => {
         </section>
         <section>
           <h2 className="m-4 text-center text-2xl font-bold">Nice Login</h2>
-        </section>
-        <section className="p-1">
-          <h2 className="m-4 text-center text-2xl font-bold">Todos</h2>
-          <ul className="list-none">
-            {myTodos.map((todo, id) => (
-              <TodoCard todo={todo} id={id} />
-            ))}
-            <hr />
-            {todos.map((todo, id) => (
-              <TodoCard todo={todo} id={id} />
-            ))}
-          </ul>
         </section>
       </Layout>
     </GlobalProvider>
