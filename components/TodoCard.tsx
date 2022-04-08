@@ -1,5 +1,5 @@
-import { Todo } from '../../lib/todos'
-import { TodoButton } from '../TodoButton'
+import { Todo } from '../lib/todos'
+import { TodoButton } from '../components'
 import { useState } from 'react'
 import Image from 'next/image'
 import { Draggable } from 'react-beautiful-dnd'

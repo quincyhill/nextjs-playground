@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { ThemeSwitcher } from '../ThemeSwitcher'
+import { ThemeSwitcher } from '../components'
 
 const name = 'Quincy Hill'
 export const siteTitle = "Quincy's fake Next.js blog"

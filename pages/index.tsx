@@ -1,16 +1,21 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import Layout, { siteTitle } from '../components/Layout/Layout'
-import { HoverTestCard } from '../components/HoverTestCard'
-import { CustomForm } from '../components/CustomForm'
-import { DropDownCard } from '../components/DropDownCard'
-import { ResponsiveCard } from '../components/ResponsiveCard'
-import { ThemedCard } from '../components/ThemedCard'
-import { CustomBlockQuote } from '../components/CustomBlockQuote'
-import { TodoCard } from '../components/TodoCard'
-import { CustomSearch } from '../components/CustomSearch'
+import {
+  Layout,
+  HoverTestCard,
+  CustomForm,
+  DropDownCard,
+  ResponsiveCard,
+  ThemedCard,
+  CustomBlockQuote,
+  TodoCard,
+  CustomSearch,
+  PostCard,
+} from '../components'
+
+import { siteTitle } from '../components/Layout'
+
 import { ExpenseTracker } from '../components/ExpenseTracker'
-import { PostCard } from '../components/PostCard'
 import { getSortedPostsData } from '../lib/posts'
 import { getTodosFromJsonPlaceHolder } from '../lib/todos'
 import { GlobalProvider } from '../lib/context/GlobalState'

@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import Date from '../Date/Date'
+import { Date } from '../components'
 
 interface PostCardProps {
   keyId: number
