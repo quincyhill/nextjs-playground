@@ -17,11 +17,9 @@ import { siteTitle } from '../components/Layout'
 
 import { ExpenseTracker } from '../components/ExpenseTracker'
 import { getSortedPostsData } from '../lib/posts'
-import { getTodosFromJsonPlaceHolder } from '../lib/todos'
 import { GlobalProvider } from '../lib/context/GlobalState'
 
 import { GetStaticProps } from 'next'
-import { Todo } from '../lib/todos'
 import { Post } from '../lib/posts'
 import {
   useEffect,
@@ -39,7 +37,6 @@ import { useDisplayName } from '../lib/hooks/useDisplayName'
 // Home Props
 interface HomeProps {
   posts: Post[]
-  todos: Todo[]
 }
 
 // Remember each page function exports one of these, I've input code here because I need it to fetch the posts data to build the page
@@ -47,14 +44,10 @@ export const getStaticProps: GetStaticProps = async () => {
   // Fetch the posts using the function I defined in my library
   const posts = getSortedPostsData()
 
-  // Fetch the todos using the function I defined in my library
-  const todos = await getTodosFromJsonPlaceHolder()
-
   // Return those posts, these posts will now be passed to the `Home` component as a prop
   return {
     props: {
       posts,
-      todos,
     },
   }
 }
@@ -75,14 +68,7 @@ let CoolButton = ({ ref }: CoolButtonProps) => {
   return <button ref={myBtn}>ImCool:{displayName}</button>
 }
 
-const HomePage = ({ posts, todos }: HomeProps) => {
-  // Also notice how utilstyles are going to be used in a similar fashion to tailwind.
-  //
-  const testTodo: Todo = { title: 'test', completed: false }
-
-  // User generated todos
-  const [myTodos, setMyTodos] = useState<Todo[]>([testTodo])
-
+const HomePage = ({ posts }: HomeProps) => {
   // Test count dealing with state withing a component
   const [count, setCount] = useState(0)
 
@@ -148,98 +134,84 @@ const HomePage = ({ posts, todos }: HomeProps) => {
 
   return (
     <GlobalProvider>
-      <Layout home>
-        <Head>
-          <title>{siteTitle}</title>
-          <meta
-            name="description"
-            content="Just a testing next js project working on SEO"
-            key="desc"
-          />
-        </Head>
-        <section className="">
-          <p>
-            Hello, I'm{' '}
-            <strong className="bg-red-200 rounded-md p-1">Quincy</strong>. I
-            need to finish my projects and apply to more jobs Also I changed a
-            few things here
-          </p>
-          <p>
-            (This is a sample website - you’ll be building a site like this on{' '}
-            <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
-          </p>
-          <br />
-          <input ref={inputEl} type="text" />
-          <button onClick={onButtonClick}>Click me {count}</button>
-          <br />
-          <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
-          <button onClick={() => dispatch({ type: 'increment' })}>+</button>
-          <p>Value of Some State: {someState}</p>
-          <br />
-          <CoolButton ref={anotherRef} />
-          <br />
-          <button ref={andAgainAnotherRef}>Full send</button>
-          <br />
-        </section>
-        <section className="p-1">
-          <h2 className="text-2xl p-6 font-bold">Blog</h2>
-          <ul className="list-none">
-            {posts.map(({ id, date, title }, keyId) => (
-              <PostCard id={id} date={date} title={title} keyId={keyId} />
-            ))}
-          </ul>
-        </section>
-        <section className="p-1">
-          <h2 className="m-4 text-center text-2xl font-bold">Todos</h2>
-          <ul className="list-none">
-            {todos.map((todo, keyId) => (
-              <TodoCard todo={todo} key={keyId} />
-            ))}
-          </ul>
-        </section>
-        <section>
-          <h2 className="m-4 text-center text-2xl font-bold">
-            Expense Tracker
-          </h2>
-          <Link href="/test">
-            <button className="bg-purple-100 hover:bg-purple-200">
-              Go to test
-            </button>
-          </Link>
-          <ExpenseTracker />
-        </section>
-        <section>
-          <h2 className="m-4 text-center text-2xl font-bold">Testing form</h2>
-          <CustomForm />
-        </section>
-        <section>
-          <h2 className="m-4 ktext-center text-2xl font-bold">Some words</h2>
-          <CustomBlockQuote />
-        </section>
-        <section>
-          <h2 className="m-4 text-center text-2xl font-bold">Search Input</h2>
-          <CustomSearch />
-        </section>
-        <section>
-          <h2 className="m-4 text-center text-2xl font-bold">
-            Group Test Card
-          </h2>
-          <HoverTestCard />
-          <br />
-          <DropDownCard />
-        </section>
-        <section>
-          <h2 className="m-4 text-center font-bold text-2xl">
-            Responsive Design
-          </h2>
-          <ResponsiveCard />
-          <br />
-          <ThemedCard />
-        </section>
-        <section>
-          <h2 className="m-4 text-center text-2xl font-bold">Nice Login</h2>
-        </section>
-      </Layout>
+      <Head>
+        <title>{siteTitle}</title>
+        <meta
+          name="description"
+          content="Just a testing next js project working on SEO"
+          key="desc"
+        />
+      </Head>
+      <section className="">
+        <p>
+          Hello, I'm{' '}
+          <strong className="bg-red-200 rounded-md p-1">Quincy</strong>. I need
+          to finish my projects and apply to more jobs Also I changed a few
+          things here
+        </p>
+        <p>
+          (This is a sample website - you’ll be building a site like this on{' '}
+          <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
+        </p>
+        <br />
+        <input ref={inputEl} type="text" />
+        <button onClick={onButtonClick}>Click me {count}</button>
+        <br />
+        <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
+        <button onClick={() => dispatch({ type: 'increment' })}>+</button>
+        <p>Value of Some State: {someState}</p>
+        <br />
+        <CoolButton ref={anotherRef} />
+        <br />
+        <button ref={andAgainAnotherRef}>Full send</button>
+        <br />
+      </section>
+      <section className="p-1">
+        <h2 className="text-2xl p-6 font-bold">Blog</h2>
+        <ul className="list-none">
+          {posts.map(({ id, date, title }, keyId) => (
+            <PostCard id={id} date={date} title={title} keyId={keyId} />
+          ))}
+        </ul>
+      </section>
+      <section>
+        <h2 className="m-4 text-center text-2xl font-bold">Expense Tracker</h2>
+        <Link href="/test">
+          <button className="bg-purple-100 hover:bg-purple-200">
+            Go to test
+          </button>
+        </Link>
+        <ExpenseTracker />
+      </section>
+      <section>
+        <h2 className="m-4 text-center text-2xl font-bold">Testing form</h2>
+        <CustomForm />
+      </section>
+      <section>
+        <h2 className="m-4 ktext-center text-2xl font-bold">Some words</h2>
+        <CustomBlockQuote />
+      </section>
+      <section>
+        <h2 className="m-4 text-center text-2xl font-bold">Search Input</h2>
+        <CustomSearch />
+      </section>
+      <section>
+        <h2 className="m-4 text-center text-2xl font-bold">Group Test Card</h2>
+        <HoverTestCard />
+        <br />
+        <DropDownCard />
+      </section>
+      <section>
+        <h2 className="m-4 text-center font-bold text-2xl">
+          Responsive Design
+        </h2>
+        <ResponsiveCard />
+        <br />
+        <ThemedCard />
+      </section>
+      <section>
+        <h2 className="m-4 text-center text-2xl font-bold">Nice Login</h2>
+      </section>
     </GlobalProvider>
   )
 }
