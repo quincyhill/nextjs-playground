@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React from 'react'
 import { ThemeSwitcher } from '../components'
 import { Provider } from 'react-redux'
-import { store } from '../lib/store'
+import { store } from '../lib/redux/store'
 
 const name = 'Quincy Hill'
 export const siteTitle = "Quincy's fake Next.js blog"
