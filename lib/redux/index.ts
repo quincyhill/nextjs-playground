@@ -42,3 +42,10 @@ store.dispatch({
 })
 
 console.log('final state: ', store.getState())
+
+const dispatchResult = store.dispatch({
+  type: 'todos/todoToggled',
+  payload: { id: 0 },
+})
+
+console.log(dispatchResult)
