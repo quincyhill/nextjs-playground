@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.1",
@@ -32,6 +33,7 @@
     "@types/redux": "^3.6.0",
     "autoprefixer": "^10.4.1",
     "cssnano": "^5.0.14",
+    "jest": "^27.5.1",
     "postcss": "^8.4.5",
     "postcss-import": "^14.0.2",
     "tailwindcss": "^3.0.11",

@@ -1,6 +1,6 @@
 import type { Filter, FilterAction } from '../../types'
 
-const initialState: Filter = {
+export const initialState: Filter = {
   status: 'all',
   colors: [],
 }

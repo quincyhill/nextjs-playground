@@ -1,10 +1,11 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ThemeSwitcher } from '../components'
 import { Provider } from 'react-redux'
 import { store } from '../lib/redux/store'
+import {} from '../lib/redux/index'
 
 const name = 'Quincy Hill'
 export const siteTitle = "Quincy's fake Next.js blog"
@@ -15,6 +16,14 @@ interface LayoutProps {
 }
 
 const Layout = ({ children, home }: LayoutProps) => {
+  useEffect(() => {
+    /*
+    console.log(store.getState())
+    store.dispatch({ type: 'todos/todoAdded', payload: { text: 'hello' } })
+    console.log(store.getState())
+    */
+  }, [])
+
   return (
     <Provider store={store}>
       <div className="flex justify-center">

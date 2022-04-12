@@ -1,6 +1,6 @@
 import type { Todo, TodoAction } from '../../types'
 
-const initialState: Todo[] = [
+export const initialState: Todo[] = [
   { id: 0, text: 'Use Redux', completed: false, color: 'red' },
   { id: 1, text: 'Use TypeScript', completed: false, color: 'blue' },
   { id: 2, text: 'Use Next.js', completed: false, color: 'yellow' },
