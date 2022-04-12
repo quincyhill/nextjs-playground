@@ -28,22 +28,31 @@ export interface AppState {
 
 export interface TodoAddedAction {
   type: 'todos/todoAdded'
-  payload: string
+  payload: {
+    text: string
+  }
 }
 
 export interface TodoToggledAction {
   type: 'todos/todoToggled'
-  payload: number
+  payload: {
+    id: number
+  }
 }
 
 export interface TodoColorSelectedAction {
   type: 'todos/todoColorSelected'
-  payload: number
+  payload: {
+    id: number
+    color: ColorChoice
+  }
 }
 
 export interface TodoDeletedAction {
   type: 'todos/todoDeleted'
-  payload: number
+  payload: {
+    id: number
+  }
 }
 
 export interface TodoAllCompletedAction {
@@ -56,15 +65,18 @@ export interface TodoCompletedClearedAction {
   payload: null
 }
 
-export interface StatusFilterChangedAction {
-  type: 'filter/statusFilterChanged'
-  payload: StatusChoice
+export interface FilterStatusChangedAction {
+  type: 'filter/filterStatusChanged'
+  payload: {
+    status: StatusChoice
+  }
 }
 
-export interface ColorFilterChangedAction {
-  type: 'filter/colorFilterChanged'
-  // NOTE: this may need changing but run with this for now
-  payload: ColorChoice[]
+export interface FilterColorChangedAction {
+  type: 'filter/filterColorChanged'
+  payload: {
+    colors: ColorChoice[]
+  }
 }
 
 export type TodoAction =
@@ -75,7 +87,7 @@ export type TodoAction =
   | TodoAllCompletedAction
   | TodoCompletedClearedAction
 
-export type FilterAction = StatusFilterChangedAction | ColorFilterChangedAction
+export type FilterAction = FilterStatusChangedAction | FilterColorChangedAction
 
 // All action types
 export type RootAction = TodoAction | FilterAction

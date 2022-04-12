@@ -10,13 +10,17 @@ export default function filterReducer(
   action: FilterAction
 ): Filter {
   switch (action.type) {
-    case 'filter/statusFilterChanged':
+    // Payload is the filter status we want to set
+    case 'filter/filterStatusChanged':
       return {
         ...state,
+        status: action.payload.status,
       }
-    case 'filter/colorFilterChanged':
+    case 'filter/filterColorChanged':
+      // Payload is the color we want to set
       return {
         ...state,
+        colors: action.payload.colors,
       }
     default:
       return {
