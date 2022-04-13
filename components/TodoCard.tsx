@@ -9,7 +9,7 @@ import type {
   StatusChoice,
 } from '../lib/types'
 
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { store } from '../lib/redux/store'
 
 // Could also use type instead of extends but this is fine
@@ -27,9 +27,61 @@ const colorList: ColorChoice[] = [
 
 const statusList: StatusChoice[] = ['all', 'active', 'completed']
 
+const selectTodoIds = (state: AppState): number[] =>
+  state.todos.map((todo) => todo.id)
+
+// its possible no todo is found thats why it does undefined
+const selectTodoById = (state: AppState, todoId: number): Todo | undefined => {
+  return state.todos.find((todo) => todo.id === todoId)
+}
+
+const TodoListItem = ({ id }: { id: number }) => {
+  const todo = useSelector((state: AppState) => selectTodoById(state, id))
+  if (todo !== undefined) {
+    const { text, completed, color } = todo
+    const dispatch = useDispatch<typeof store.dispatch>()
+
+    const handleCompletedChanged = () => {
+      dispatch({ type: 'todos/todoToggled', payload: { id: todo.id } })
+    }
+
+    return (
+      <li className="flex flex-row p-1 m-1 border rounded-md justify-between">
+        <span>{text}</span>
+        <button
+          className="p-1 bg-red-400 hover:bg-red-600 rounded-full"
+          onClick={() => {
+            // stuff here
+            dispatch({
+              type: 'todos/todoDeleted',
+              payload: { id: todo.id },
+            })
+          }}
+        >
+          <X className="w-4 h-4" />
+        </button>
+      </li>
+    )
+  } else {
+    return null
+  }
+}
+
+const TodoList = () => {
+  // Again we're returning a new id array
+  const todoIds = useSelector(selectTodoIds, shallowEqual)
+
+  const renderedListItems = todoIds.map((todoId, key) => {
+    return <TodoListItem key={key} id={todoId} />
+  })
+
+  return <ul>{renderedListItems}</ul>
+}
+
 const TodoCard = () => {
   const [textInput, setTextInput] = useState('')
   const { register, handleSubmit, watch } = useForm<FormInput>()
+  const [someState, setSomeState] = useState(0)
 
   const todosRemaining = useSelector((state: AppState) => {
     const uncompletedTodos = state.todos.filter((todo) => !todo.completed)
@@ -49,6 +101,10 @@ const TodoCard = () => {
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
 
+  const test = () => {
+    return <div>This is a test</div>
+  }
+
   // This returns just the todos from the store
   const selectTodos = (state: AppState): Todo[] => state.todos
 
@@ -64,6 +120,7 @@ const TodoCard = () => {
   }
 
   const todos = useSelector(selectTodos)
+
   // Useful case of typeof
   const dispatch = useDispatch<typeof store.dispatch>()
 
@@ -92,6 +149,8 @@ const TodoCard = () => {
         onChange={handleTextInputChange}
         onKeyDown={handleTextInputKeyDown}
       />
+      {/* getting rid of the old version*/}
+      {/* 
       <ul id="my-todo-list">
         {todos.map((todo, index) => (
           <li className="flex flex-row p-1 m-1 border rounded-md justify-between">
@@ -111,6 +170,8 @@ const TodoCard = () => {
           </li>
         ))}
       </ul>
+            */}
+      <TodoList />
       <hr />
       <div>
         <button
