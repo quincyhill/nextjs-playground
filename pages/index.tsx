@@ -1,14 +1,12 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import {
-  Layout,
   HoverTestCard,
   CustomForm,
   DropDownCard,
   ResponsiveCard,
   ThemedCard,
   CustomBlockQuote,
-  TodoCard,
   CustomSearch,
   PostCard,
 } from '../components'

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, ChangeEvent, KeyboardEvent } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { X } from 'react-bootstrap-icons'
 import type {
@@ -9,28 +9,11 @@ import type {
   StatusChoice,
 } from '../lib/types'
 
-// These are to have some dummy state
-import { initialState as initialTodos } from '../lib/redux/todos/todosSlice'
-import { initialState as initialFilter } from '../lib/redux/filter/filterSlice'
+import { useSelector, useDispatch } from 'react-redux'
+import { store } from '../lib/redux/store'
 
 // Could also use type instead of extends but this is fine
 interface FormInput extends Filter {}
-
-interface TodoListItemProps {
-  todo: Todo
-}
-
-const TodoListItem = (props: TodoListItemProps) => {
-  const { todo } = props
-  return (
-    <li className="flex flex-row">
-      <span>{todo.text}</span>
-      <button>
-        <X />
-      </button>
-    </li>
-  )
-}
 
 const colorList: ColorChoice[] = [
   null,
@@ -45,10 +28,15 @@ const colorList: ColorChoice[] = [
 const statusList: StatusChoice[] = ['all', 'active', 'completed']
 
 const TodoCard = () => {
-  const todos = initialTodos
-  const filter = initialFilter
-
+  const [textInput, setTextInput] = useState('')
   const { register, handleSubmit, watch } = useForm<FormInput>()
+
+  const todosRemaining = useSelector((state: AppState) => {
+    const uncompletedTodos = state.todos.filter((todo) => !todo.completed)
+    return uncompletedTodos.length
+  })
+
+  const { status, colors } = useSelector((state: AppState) => state.filter)
 
   const onSubmit: SubmitHandler<FormInput> = (data) => {
     const { colors, status } = data
@@ -61,15 +49,79 @@ const TodoCard = () => {
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
 
+  // This returns just the todos from the store
+  const selectTodos = (state: AppState): Todo[] => state.todos
+
+  // This returns how many todos are marked as completed
+  const selectTotalCompletedTodos = (state: AppState): number => {
+    return state.todos.filter((todo) => todo.completed).length
+  }
+
+  // Bad: always returning a new reference. Dont do this
+  const selectTodoTexts = (state: AppState): string[] => {
+    // This creates a new array reference!
+    return state.todos.map((todo) => todo.text)
+  }
+
+  const todos = useSelector(selectTodos)
+  // Useful case of typeof
+  const dispatch = useDispatch<typeof store.dispatch>()
+
+  const handleTextInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log('handleTextInputChange', e.target.value)
+    setTextInput(e.target.value)
+  }
+
+  const handleTextInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    // lets sett
+    const trimmedText = textInput.trim()
+    if (e.key === 'Enter' && trimmedText) {
+      // Dispatch the "todo added" action with this text
+      dispatch({ type: 'todos/todoAdded', payload: { text: trimmedText } })
+      // And clear the text input
+      setTextInput('')
+    }
+  }
+
   return (
     <div className="p-2 shadow-lg rounded-md flex flex-col">
-      <input className="border-b-2" placeholder="What needs to be done?" />
+      <input
+        className="border-b-2"
+        placeholder="What needs to be done?"
+        value={textInput}
+        onChange={handleTextInputChange}
+        onKeyDown={handleTextInputKeyDown}
+      />
       <ul id="my-todo-list">
         {todos.map((todo, index) => (
-          <TodoListItem todo={todo} />
+          <li className="flex flex-row p-1 m-1 border rounded-md justify-between">
+            <span>{todo.text}</span>
+            <button
+              className="p-1 bg-red-400 hover:bg-red-600 rounded-full"
+              onClick={() => {
+                // stuff here
+                dispatch({
+                  type: 'todos/todoDeleted',
+                  payload: { id: todo.id },
+                })
+              }}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </li>
         ))}
       </ul>
       <hr />
+      <div>
+        <button
+          className="bg-green-200 rounded-md p-2"
+          onClick={() => {
+            dispatch({ type: 'todos/todoAdded', payload: { text: 'New Todo' } })
+          }}
+        >
+          Test
+        </button>
+      </div>
       <div className="flex flex-col items-center">
         <span>Actions</span>
         <button className="p-2 bg-blue-500 rounded-md text-white m-2">
@@ -80,8 +132,12 @@ const TodoCard = () => {
         </button>
         <span>Remaining Todos</span>
         <span>
-          <strong>1</strong>
-          <span>Item left</span>
+          <strong>{String(todosRemaining)}</strong>
+          {todosRemaining === 1 ? (
+            <span>Item left</span>
+          ) : (
+            <span>Items left</span>
+          )}
         </span>
         <span>Filter by status</span>
         <form onSubmit={handleSubmit(onSubmit)}>

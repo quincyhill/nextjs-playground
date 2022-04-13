@@ -45,7 +45,8 @@ export const store = createStore(
   rootReducer,
   {
     todos: todosState,
-    filters: filterState,
+    // bug fix name
+    filter: filterState,
   },
   composeEnhancer(middlewareEnhancer)
 )

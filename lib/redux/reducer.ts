@@ -7,12 +7,13 @@ import type { RootAction, Todo, Filter } from '../types'
 const rootReducer: Reducer<
   CombinedState<{
     todos: Todo[]
-    filters: Filter
+    // bug fix name
+    filter: Filter
   }>,
   RootAction
 > = combineReducers({
   todos: todosReducer,
-  filters: filterReducer,
+  filter: filterReducer,
 })
 
 export default rootReducer

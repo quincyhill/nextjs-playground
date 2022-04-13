@@ -2,7 +2,6 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect } from 'react'
-import { ThemeSwitcher } from '../components'
 import { Provider } from 'react-redux'
 import { store } from '../lib/redux/store'
 import {} from '../lib/redux/index'
@@ -16,14 +15,6 @@ interface LayoutProps {
 }
 
 const Layout = ({ children, home }: LayoutProps) => {
-  useEffect(() => {
-    /*
-    console.log(store.getState())
-    store.dispatch({ type: 'todos/todoAdded', payload: { text: 'hello' } })
-    console.log(store.getState())
-    */
-  }, [])
-
   return (
     <Provider store={store}>
       <div className="flex justify-center">
@@ -68,13 +59,16 @@ const Layout = ({ children, home }: LayoutProps) => {
             )}
           </header>
           <main className="m-2">{children}</main>
-          {!home && (
-            <div className="m-3 border-t-2">
-              <Link href="/">
-                <a>← Back to home</a>
-              </Link>
-            </div>
-          )}
+          <div className="m-3 border-t-2">
+            <Link href="/">
+              <a>← Back to home</a>
+            </Link>
+          </div>
+          <div className="m-3 border-t-2">
+            <Link href="/test">
+              <a>← to test</a>
+            </Link>
+          </div>
           <footer id="main-footer" className={home ? 'border-t-2' : ''}>
             <h2 className="font-medium text-center">Made by me</h2>
           </footer>

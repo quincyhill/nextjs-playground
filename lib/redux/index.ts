@@ -11,10 +11,12 @@ store.dispatch({
   payload: { text: 'learn about actions' },
 })
 
+/*
 store.dispatch({
   type: 'todos/todoAdded',
   payload: { text: 'learn about redux' },
 })
+*/
 
 store.dispatch({
   type: 'todos/todoAdded',
