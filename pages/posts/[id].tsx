@@ -1,7 +1,7 @@
-import Layout from '../../components/Layout/Layout'
+import Layout from '../../components/Layout'
 import { getAllPostIds, getPostData, Post, PostData } from '../../lib/posts'
 import Head from 'next/head'
-import Date from '../../components/Date/Date'
+import { Date } from '../../components'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 

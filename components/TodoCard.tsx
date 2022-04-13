@@ -1,15 +1,25 @@
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { X } from 'react-bootstrap-icons'
-import type { Todo, AppState, Filter, ColorChoice } from '../lib/types'
+import type {
+  Todo,
+  AppState,
+  Filter,
+  ColorChoice,
+  StatusChoice,
+} from '../lib/types'
 
 // These are to have some dummy state
 import { initialState as initialTodos } from '../lib/redux/todos/todosSlice'
 import { initialState as initialFilter } from '../lib/redux/filter/filterSlice'
 
+// Could also use type instead of extends but this is fine
+interface FormInput extends Filter {}
+
 interface TodoListItemProps {
   todo: Todo
 }
+
 const TodoListItem = (props: TodoListItemProps) => {
   const { todo } = props
   return (
@@ -32,9 +42,24 @@ const colorList: ColorChoice[] = [
   'purple',
 ]
 
+const statusList: StatusChoice[] = ['all', 'active', 'completed']
+
 const TodoCard = () => {
   const todos = initialTodos
   const filter = initialFilter
+
+  const { register, handleSubmit, watch } = useForm<FormInput>()
+
+  const onSubmit: SubmitHandler<FormInput> = (data) => {
+    const { colors, status } = data
+
+    console.log('colors', colors)
+    console.log('staus', status)
+  }
+
+  const capitalizeFirstLetter = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  }
 
   return (
     <div className="p-2 shadow-lg rounded-md flex flex-col">
@@ -59,60 +84,53 @@ const TodoCard = () => {
           <span>Item left</span>
         </span>
         <span>Filter by status</span>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div>
-            <input
-              type="radio"
-              id="all-input"
-              name="status_thing"
-              value="all"
-            />
-            <label>All</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="active-input"
-              name="status_thing"
-              value="active"
-            />
-            <label>Active</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="completed-input"
-              name="status_thing"
-              value="completed"
-            />
-            <label>Completed</label>
-          </div>
-        </form>
-        <span>Filter by Color</span>
-        <form>
-          {colorList.map((color, index) => {
-            // could also maybe use a filter to only show non null colors but this works for now
-            if (color !== null) {
+            {statusList.map((status, index) => {
               return (
-                <div className="flex flex-row items-center space-x-2">
+                <div>
                   <input
-                    type="checkbox"
-                    id={`${color}-input`}
-                    name="color_thing"
-                    value={color}
+                    type="radio"
+                    id={`${status}-radio`}
+                    value={status}
+                    {...register('status')}
                   />
-                  <canvas
-                    width={20}
-                    height={20}
-                    style={{
-                      backgroundColor: color,
-                    }}
-                  />
-                  <span>{color}</span>
+                  <label>{capitalizeFirstLetter(status)}</label>
                 </div>
               )
-            }
-          })}
+            })}
+          </div>
+          <span>Filter by Color</span>
+          <div>
+            {colorList.map((color, index) => {
+              // could also maybe use a filter to only show non null colors but this works for now
+              if (color !== null) {
+                return (
+                  <div className="flex flex-row items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id={`${color}-input`}
+                      value={color}
+                      {...register('colors')}
+                    />
+                    <canvas
+                      width={20}
+                      height={20}
+                      style={{
+                        backgroundColor: color,
+                      }}
+                    />
+                    <span>{color}</span>
+                  </div>
+                )
+              }
+            })}
+          </div>
+          <div>
+            <button className="bg-green-200 rounded-md p-2" type="submit">
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </div>
