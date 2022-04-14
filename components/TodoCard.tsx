@@ -32,7 +32,6 @@ const TodoListItem = ({ id }: { id: number }) => {
   if (todo !== undefined) {
     const { text, completed, color } = todo
     const dispatch = useDispatch<typeof store.dispatch>()
-    const [selectedColor, setSelectedColor] = useState<ColorChoice>(color)
 
     const handleCompletedChanged = () => {
       dispatch({ type: 'todos/todoToggled', payload: { id: todo.id } })
@@ -44,7 +43,6 @@ const TodoListItem = ({ id }: { id: number }) => {
         colorSelected = null
       }
 
-      setSelectedColor(colorSelected)
       dispatch({
         type: 'todos/todoColorSelected',
         payload: { id: todo.id, color: colorSelected },
@@ -64,7 +62,7 @@ const TodoListItem = ({ id }: { id: number }) => {
               id={`color-select-${id}`}
               name={`color-dropdown-${id}`}
               onChange={handleColorSelectChange}
-              value={selectedColor as string}
+              value={color as string}
             >
               <option className="bg-white" value="none">
                 no color
@@ -153,6 +151,7 @@ const TodoList = () => {
 const TodoCard = () => {
   const { status, colors } = useSelector((state: AppState) => state.filter)
 
+  // This should be the ONLY thing that has use state since the input only matters when the user is typing
   const [textInput, setTextInput] = useState('')
 
   const todosRemaining = useSelector((state: AppState) => {
