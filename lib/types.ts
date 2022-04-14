@@ -57,12 +57,10 @@ export interface TodoDeletedAction {
 
 export interface TodoAllCompletedAction {
   type: 'todos/todoAllCompleted'
-  payload: null
 }
 
 export interface TodoCompletedClearedAction {
   type: 'todos/todoCompletedCleared'
-  payload: null
 }
 
 export interface FilterStatusChangedAction {

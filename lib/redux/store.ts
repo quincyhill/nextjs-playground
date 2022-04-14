@@ -1,14 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit'
 import { createStore, applyMiddleware } from 'redux'
-import type { EnhancedStore, CombinedState } from '@reduxjs/toolkit'
-import type { Todo, Filter, RootAction, AppState } from '../types'
 import { initialState as filterState } from './filter/filterSlice'
 import { initialState as todosState } from './todos/todosSlice'
 import rootReducer from './reducer'
 import { composeWithDevTools } from '@redux-devtools/extension'
 
-// Dont know how to do this part, skip it for now
-// No enhancers or middlewares for now
+// Still need to go back to these and figure them out better
 import {
   sayHiOnDispatch,
   monitorReducerEnhancer,
