@@ -63,6 +63,17 @@ export interface TodoCompletedClearedAction {
   type: 'todos/todoCompletedCleared'
 }
 
+export interface TodosFetchedAction {
+  type: 'todos/todosFetched'
+}
+
+export interface TodosLoadedAction {
+  type: 'todos/todosLoaded'
+  payload: {
+    todos: Todo[]
+  }
+}
+
 export interface FilterStatusChangedAction {
   type: 'filter/filterStatusChanged'
   payload: {
@@ -84,6 +95,8 @@ export type TodoAction =
   | TodoDeletedAction
   | TodoAllCompletedAction
   | TodoCompletedClearedAction
+  | TodosFetchedAction
+  | TodosLoadedAction
 
 export type FilterAction = FilterStatusChangedAction | FilterColorChangedAction
 
