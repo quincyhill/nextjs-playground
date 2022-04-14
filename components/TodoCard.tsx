@@ -1,21 +1,11 @@
-import { useState, ChangeEvent, KeyboardEvent, MouseEvent } from 'react'
+import { useState, ChangeEvent, KeyboardEvent } from 'react'
 import { X, Check, Dash } from 'react-bootstrap-icons'
-import type {
-  Todo,
-  AppState,
-  Filter,
-  ColorChoice,
-  StatusChoice,
-} from '../lib/types'
+import type { Todo, AppState, ColorChoice, StatusChoice } from '../lib/types'
 
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { store } from '../lib/redux/store'
 
-// React hook form doesnt make sense here because each change will update the global state and thus return a new array of todos
-
-// Could also use type instead of extends but this is fine
-interface FormInput extends Filter {}
-
+// All my options for color choices
 const colorList: ColorChoice[] = [
   null,
   'red',
@@ -26,6 +16,7 @@ const colorList: ColorChoice[] = [
   'purple',
 ]
 
+// All my options for status choices
 const statusList: StatusChoice[] = ['all', 'active', 'completed']
 
 const selectTodoIds = (state: AppState): number[] =>
@@ -124,32 +115,14 @@ const TodoListItem = ({ id }: { id: number }) => {
 
 const TodoList = () => {
   // Again we're returning a new id array
-  const todoIds = useSelector(selectTodoIds, shallowEqual)
-
-  const renderedListItems = todoIds.map((todoId) => {
-    return <TodoListItem id={todoId} />
-  })
-
-  return <ul>{renderedListItems}</ul>
-}
-
-const TodoCard = () => {
   const { status, colors } = useSelector((state: AppState) => state.filter)
 
-  const [textInput, setTextInput] = useState('')
+  // This will be repalced by the filtered todos
+  const todoIds = useSelector(selectTodoIds, shallowEqual)
 
-  // Initailize the color list to what is in the store, IDK this feel redundant... but it works
-  const [colorsInput, setColorsInput] = useState<ColorChoice[]>(colors)
-
-  const todosRemaining = useSelector((state: AppState) => {
-    const uncompletedTodos = state.todos.filter((todo) => !todo.completed)
-    return uncompletedTodos.length
-  })
-
-  const todosFiltered = useSelector((state: AppState): Todo[] => {
-    // Lets see if this works, need to go over todos Remaining as it seems to work...
-    // will filter the todos based on the status and colors
-    const filteredTodos: Todo[] = state.todos
+  const filteredTodosIds = useSelector((state: AppState): number[] => {
+    // Yea this mostly works now still some bugs
+    const filteredTodos: number[] = state.todos
       .filter((todo) => {
         if (status === 'all') {
           return true
@@ -166,12 +139,26 @@ const TodoCard = () => {
           return colors.includes(todo.color)
         }
       })
-
+      .map((todo) => todo.id)
     return filteredTodos
   })
 
-  // This is what will be visually shown initailize it will the filtered list which includes everything
-  const [todos, setTodos] = useState<Todo[]>(todosFiltered)
+  const renderedListItems = filteredTodosIds.map((todoId) => {
+    return <TodoListItem id={todoId} />
+  })
+
+  return <ul>{renderedListItems}</ul>
+}
+
+const TodoCard = () => {
+  const { status, colors } = useSelector((state: AppState) => state.filter)
+
+  const [textInput, setTextInput] = useState('')
+
+  const todosRemaining = useSelector((state: AppState) => {
+    const uncompletedTodos = state.todos.filter((todo) => !todo.completed)
+    return uncompletedTodos.length
+  })
 
   const capitalizeFirstLetter = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1)
@@ -211,14 +198,10 @@ const TodoCard = () => {
 
   const handleSetAllTodosComplete = () => {
     dispatch({ type: 'todos/todoAllCompleted' })
-    // update the visible todos
-    setTodos(todosFiltered)
   }
 
   const handleClearCompleted = () => {
     dispatch({ type: 'todos/todoCompletedCleared' })
-    // update the visible todos
-    setTodos(todosFiltered)
   }
 
   const handleColorInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -227,7 +210,7 @@ const TodoCard = () => {
     const isChecked = e.target.checked
 
     // Copy the colors array
-    let colorList = [...colorsInput]
+    let colorList = [...colors]
 
     if (isChecked) {
       // Add the color to the list
@@ -237,17 +220,13 @@ const TodoCard = () => {
       colorList = colorList.filter((color) => color !== colorInput)
     }
 
-    // Set the overall color list
-    setColorsInput(colorList)
-
-    // update the visible todos
-    setTodos(todosFiltered)
-
     // Since we know this works now dispatch the color change
     dispatch({
       type: 'filter/filterColorChanged',
       payload: { colors: colorList },
     })
+
+    console.log('color list', colorList)
   }
 
   const handleStatusInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -257,9 +236,6 @@ const TodoCard = () => {
       type: 'filter/filterStatusChanged',
       payload: { status: pickedStatus },
     })
-
-    // update the visible todos
-    setTodos(todosFiltered)
   }
 
   return (
@@ -275,9 +251,6 @@ const TodoCard = () => {
       <hr />
       <div className="flex flex-col items-center">
         <span>Actions</span>
-        <div>
-          <span>{JSON.stringify(todos)}</span>
-        </div>
         <button
           className="p-2 bg-blue-500 rounded-md text-white m-2"
           onClick={handleSetAllTodosComplete}
