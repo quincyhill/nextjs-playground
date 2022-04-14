@@ -48,24 +48,36 @@ const TodoListItem = ({ id }: { id: number }) => {
     }
 
     const handleColorSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-      setSelectedColor(e.target.value as ColorChoice)
+      let colorSelected = e.target.value as ColorChoice
+      if (e.target.value === 'none') {
+        colorSelected = null
+      }
+
+      setSelectedColor(colorSelected)
+      dispatch({
+        type: 'todos/todoColorSelected',
+        payload: { id: todo.id, color: colorSelected },
+      })
+      console.log('Color', colorSelected)
     }
 
     return (
-      <li className="flex flex-row p-1 m-1 border rounded-md justify-between">
+      <li
+        className="flex flex-row p-1 m-1 border-2 rounded-md justify-between"
+        style={{ borderColor: color !== null ? color : 'lightgray' }}
+      >
         <span>{text}</span>
         <div className="flex space-x-1 items-center">
           <form>
             <select
               id={`color-select-${id}`}
               name={`color-dropdown-${id}`}
-              style={{
-                backgroundColor: color !== null ? color : 'transparent',
-              }}
               onChange={handleColorSelectChange}
               value={selectedColor as string}
             >
-              <option className="bg-white">no color</option>
+              <option className="bg-white" value="none">
+                no color
+              </option>
               {colorList
                 .filter((color) => color !== null)
                 .map((color) => (
@@ -126,7 +138,7 @@ const TodoCard = () => {
 
   const [textInput, setTextInput] = useState('')
 
-  // Initailize the color list to what is in the store
+  // Initailize the color list to what is in the store, IDK this feel redundant... but it works
   const [colorsInput, setColorsInput] = useState<ColorChoice[]>(colors)
 
   const todosRemaining = useSelector((state: AppState) => {
@@ -134,12 +146,35 @@ const TodoCard = () => {
     return uncompletedTodos.length
   })
 
+  const todosFiltered = useSelector((state: AppState): Todo[] => {
+    // Lets see if this works, need to go over todos Remaining as it seems to work...
+    // will filter the todos based on the status and colors
+    const filteredTodos: Todo[] = state.todos
+      .filter((todo) => {
+        if (status === 'all') {
+          return true
+        } else if (status === 'active') {
+          return todo.completed
+        } else if (status === 'completed') {
+          return !todo.completed
+        }
+      })
+      .filter((todo) => {
+        if (colors.length === 0) {
+          return true
+        } else {
+          return colors.includes(todo.color)
+        }
+      })
+
+    return filteredTodos
+  })
+
+  // This is what will be visually shown initailize it will the filtered list which includes everything
+  const [todos, setTodos] = useState<Todo[]>(todosFiltered)
+
   const capitalizeFirstLetter = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1)
-  }
-
-  const test = () => {
-    return <div>This is a test</div>
   }
 
   // This returns just the todos from the store
@@ -155,8 +190,6 @@ const TodoCard = () => {
     // This creates a new array reference!
     return state.todos.map((todo) => todo.text)
   }
-
-  const todos = useSelector(selectTodos)
 
   // Useful case of typeof
   const dispatch = useDispatch<typeof store.dispatch>()
@@ -178,10 +211,14 @@ const TodoCard = () => {
 
   const handleSetAllTodosComplete = () => {
     dispatch({ type: 'todos/todoAllCompleted' })
+    // update the visible todos
+    setTodos(todosFiltered)
   }
 
   const handleClearCompleted = () => {
     dispatch({ type: 'todos/todoCompletedCleared' })
+    // update the visible todos
+    setTodos(todosFiltered)
   }
 
   const handleColorInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -195,13 +232,16 @@ const TodoCard = () => {
     if (isChecked) {
       // Add the color to the list
       colorList.push(colorInput)
-      // Set the overall color list
-      setColorsInput(colorList)
     } else {
       // Filter out the color and only return the remaining colors
       colorList = colorList.filter((color) => color !== colorInput)
-      setColorsInput(colorList)
     }
+
+    // Set the overall color list
+    setColorsInput(colorList)
+
+    // update the visible todos
+    setTodos(todosFiltered)
 
     // Since we know this works now dispatch the color change
     dispatch({
@@ -217,6 +257,9 @@ const TodoCard = () => {
       type: 'filter/filterStatusChanged',
       payload: { status: pickedStatus },
     })
+
+    // update the visible todos
+    setTodos(todosFiltered)
   }
 
   return (
@@ -230,18 +273,11 @@ const TodoCard = () => {
       />
       <TodoList />
       <hr />
-      <div>
-        <button
-          className="bg-green-200 rounded-md p-2"
-          onClick={() => {
-            dispatch({ type: 'todos/todoAdded', payload: { text: 'New Todo' } })
-          }}
-        >
-          Test
-        </button>
-      </div>
       <div className="flex flex-col items-center">
         <span>Actions</span>
+        <div>
+          <span>{JSON.stringify(todos)}</span>
+        </div>
         <button
           className="p-2 bg-blue-500 rounded-md text-white m-2"
           onClick={handleSetAllTodosComplete}
