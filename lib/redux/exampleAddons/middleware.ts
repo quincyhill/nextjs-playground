@@ -78,7 +78,7 @@ type StoreType = Store<
 >
 
 export const delayedMessageMiddlware: (
-  storeAPI: StoreType
+  storeAPI: any
 ) => (next: any) => (action: RootAction) => RootAction =
   (storeAPI: typeof store) =>
   (next: typeof store.dispatch) =>
@@ -108,22 +108,25 @@ export function delayedActionMiddleWare(storeAPI: typeof store) {
   }
 }
 
+// This middleware is dedicated to fetching todos from the server
 export function fetchTodosMiddlware(storeAPI: typeof store) {
-  // anonyomous function
   return function wrapDispatch(next: typeof store.dispatch) {
     return function handleAction(action: RootAction) {
       if (action.type === 'todos/todosFetched') {
         // make an api call to fetch todos from the server aka my nextjs api
         // I'll use fetch to make the api call since I'm trying to minimize use of axios
-        fetch('/api/fakeApi/todos', {
+        fetch('http://192.168.0.16:3000/api/fakeApi/todos', {
           method: 'GET',
         })
           .then((response) => response.json())
-          .then((todos) => {
+          .then((todos: Todo[]) => {
             // lets see what this returns but first I must fix up the server
             console.log(todos)
             // NOTE: Dispatch the todos, but again need to make sure they are valid so i'm going to comment them out for now
-            // storeAPI.dispatch({type: 'todos/todosLoaded', payload: todos})
+            storeAPI.dispatch({
+              type: 'todos/todosLoaded',
+              payload: { todos: todos },
+            })
           })
       }
       return next(action)
@@ -131,13 +134,12 @@ export function fetchTodosMiddlware(storeAPI: typeof store) {
   }
 }
 
-// This could be nice to prevent unneccessary api calls?... will have to try it out and see
 // Writing an async function middleware
 // writting a middleware that lets us pass a function to dispatch intead of an action object
 // We could have our middlware check to see if the "action" is actually a function instead, and if its a function
 // and call the function right away.
 // This would let me write async logic in separate functions and then call them from the middleware definition.
-const asyncFunctionMiddlware =
+export const asyncFunctionMiddleware =
   (storeAPI: any) => (next: any) => (action: any) => {
     // If the "action" is a actually a funciton instead...
     if (typeof action === 'function') {

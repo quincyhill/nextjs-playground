@@ -1,16 +1,14 @@
 import type { Todo, TodoAction } from '../../types'
+import { store } from '../store'
 
-export const initialState: Todo[] = [
-  { id: 0, text: 'Use Redux', completed: false, color: 'red' },
-  { id: 1, text: 'Use TypeScript', completed: false, color: 'blue' },
-  { id: 2, text: 'Use Next.js', completed: false, color: 'yellow' },
-]
+export const initialState: Todo[] = []
 
 function nextTodoId(todos: Todo[]): number {
   const maxId = todos.reduce((maxId, todo) => Math.max(todo.id, maxId), -1)
   return maxId + 1
 }
 
+// Standard reducer keep it a pure function
 // This is known as reducer composition, fundamental for building with redux
 export default function todosReducer(
   state: Todo[] = initialState,
@@ -71,7 +69,51 @@ export default function todosReducer(
     case 'todos/todoCompletedCleared':
       // Filter through all my todos and remove all the todos that are completed
       return state.filter((todo) => !todo.completed)
+    case 'todos/todosLoaded':
+      // Replace the existing state entirely by returning the payload always do copies to ensure immutability
+      return [...action.payload.todos]
     default:
       return [...state]
+  }
+}
+
+const TODOURL = 'http://192.168.0.16:3000/api/fakeApi/todos'
+
+// Thunk function allows for side effects
+export async function fetchTodos(
+  dispatch: typeof store.dispatch,
+  getState: typeof store.getState
+) {
+  const response = await fetch(TODOURL, {
+    method: 'GET',
+  })
+
+  const todos: Todo[] = await response.json()
+
+  // somewhere I have the default of 3 todos somewhere
+  const stateBefore = getState()
+  console.log('Todos before dispatch', stateBefore.todos.length)
+
+  dispatch({ type: 'todos/todosLoaded', payload: { todos: todos } })
+
+  const stateAfter = getState()
+  console.log('Number of todos after loading', stateAfter.todos.length)
+}
+
+// Write a synchronous outer function that receives the `text` parameter:
+export function saveNewTodo(text: string) {
+  // And then creates and returns the async thunk function:
+  return async function saveNewTodoThunk(
+    dispatch: typeof store.dispatch,
+    getState: typeof store.getState
+  ) {
+    // Now we can use the text value and send it to the server
+    // could change this around
+    const todoText = { text }
+    const response = await fetch(TODOURL, {
+      method: 'POST',
+      body: JSON.stringify(todoText),
+    })
+    dispatch({ type: 'todos/todoAdded', payload: todoText })
   }
 }

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
-  res.status(200).json({ text: 'hello' })
+  res.status(200).json({ text: 'hello there' })
 
   // An example for use would be handling form input here and save this info to the database
 

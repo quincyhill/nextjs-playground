@@ -4,14 +4,8 @@ import todosReducer from './todos/todosSlice'
 import filterReducer from './filter/filterSlice'
 import type { RootAction, Todo, Filter } from '../types'
 
-const rootReducer: Reducer<
-  CombinedState<{
-    todos: Todo[]
-    // bug fix name
-    filter: Filter
-  }>,
-  RootAction
-> = combineReducers({
+// I think this is making it too strict
+const rootReducer = combineReducers({
   todos: todosReducer,
   filter: filterReducer,
 })

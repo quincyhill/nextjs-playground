@@ -125,9 +125,9 @@ const TodoList = () => {
         if (status === 'all') {
           return true
         } else if (status === 'active') {
-          return todo.completed
-        } else if (status === 'completed') {
           return !todo.completed
+        } else if (status === 'completed') {
+          return todo.completed
         }
       })
       .filter((todo) => {
