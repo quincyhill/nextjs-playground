@@ -122,11 +122,15 @@ export function fetchTodosMiddlware(storeAPI: typeof store) {
           .then((todos: Todo[]) => {
             // lets see what this returns but first I must fix up the server
             console.log(todos)
+            // lol for now its not todos but ill make it work
             // NOTE: Dispatch the todos, but again need to make sure they are valid so i'm going to comment them out for now
+
+            /*
             storeAPI.dispatch({
               type: 'todos/todosLoaded',
               payload: { todos: todos },
             })
+            */
           })
       }
       return next(action)

@@ -53,7 +53,7 @@ export const store = createStore(
 )
 
 // Write a function that has `dispatch` and `getState` as arguments
-// Giving this function some optional parameters
+// Giving this function some optional parameters, this should be working here
 export const fetchSomeData = (
   dispatch: typeof store.dispatch,
   getState: typeof store.getState

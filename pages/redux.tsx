@@ -1,4 +1,5 @@
-import { store } from '../lib/store'
+// Fixed the import
+import { store } from '../lib/redux/store'
 
 export default function ReduxPage() {
   return (

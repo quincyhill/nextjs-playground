@@ -77,6 +77,7 @@ export default function todosReducer(
   }
 }
 
+// Correct url just needs valid todos for now
 const TODOURL = 'http://192.168.0.16:3000/api/fakeApi/todos'
 
 // Thunk function allows for side effects
@@ -84,17 +85,34 @@ export async function fetchTodos(
   dispatch: typeof store.dispatch,
   getState: typeof store.getState
 ) {
-  const response = await fetch(TODOURL, {
-    method: 'GET',
-  })
-
-  const todos: Todo[] = await response.json()
+  // Thunk function aka async function because it has some side effects / delay
+  const todos: Todo[] = [
+    { id: 0, text: 'Use Redux', completed: false, color: 'red' },
+    { id: 1, text: 'Use TypeScript', completed: false, color: 'blue' },
+    { id: 2, text: 'Use Next.js', completed: false, color: 'yellow' },
+    { id: 3, text: 'what is this', completed: true, color: 'green' },
+  ]
 
   // somewhere I have the default of 3 todos somewhere
   const stateBefore = getState()
   console.log('Todos before dispatch', stateBefore.todos.length)
 
+  // Make a call to the fake API to get a list of todos AYO this is nice
+  // Looks like CORS is not enabled on the fake API
+  const response = await fetch(TODOURL)
+  const data = await response.json()
+  // Dispatch the todosLoaded action to update the state
+  dispatch({
+    type: 'todos/todosLoaded',
+    payload: {
+      todos: data,
+    },
+  })
+
+  /*
+  // Maybe do some middleware stuff here?
   dispatch({ type: 'todos/todosLoaded', payload: { todos: todos } })
+  */
 
   const stateAfter = getState()
   console.log('Number of todos after loading', stateAfter.todos.length)
