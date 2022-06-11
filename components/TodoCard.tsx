@@ -4,6 +4,7 @@ import type { Todo, AppState, ColorChoice, StatusChoice } from '../lib/types'
 
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { store } from '../lib/redux/store'
+import { saveNewTodo } from '../lib/redux/todos/todosSlice'
 
 // All my options for color choices
 const colorList: ColorChoice[] = [
@@ -185,12 +186,18 @@ const TodoCard = () => {
   }
 
   const handleTextInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    // lets sett
+    // This is what happens when the user presses enter
     const trimmedText = textInput.trim()
     if (e.key === 'Enter' && trimmedText) {
+      // So now instead we will be using the thunk rather than just dispatching an action
       // Dispatch the "todo added" action with this text
+      /*
       dispatch({ type: 'todos/todoAdded', payload: { text: trimmedText } })
+      */
       // And clear the text input
+      const saveNewTodoThunk = saveNewTodo(trimmedText)
+      // Need to update type for dispatch to include the thunk
+      dispatch(saveNewTodoThunk)
       setTextInput('')
     }
   }
@@ -237,6 +244,7 @@ const TodoCard = () => {
     })
   }
 
+  // needs to placed here
   return (
     <div className="p-2 shadow-lg rounded-md flex flex-col">
       <input

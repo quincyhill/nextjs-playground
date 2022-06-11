@@ -20,6 +20,7 @@ import {
   alwaysReturnHelloMiddleware,
   delayedMessageMiddlware,
   asyncFunctionMiddleware,
+  delayedActionMiddleware,
 } from './exampleAddons/middleware'
 
 // Middlewares ARE intended to have side effects like API calls, console logs, event listeners to things like audio / video etc
@@ -30,6 +31,7 @@ const middlewareEnhancer = applyMiddleware(
   thunkMiddleware
 )
 
+// For redux dev tools
 const composedEnhancer = composeWithDevTools(
   // Example: add whatever middleware you actually want to use here
   // other store enhancers if any
@@ -49,11 +51,13 @@ export const store = createStore(
     filter: filterState,
   },
   */
+  // Puts the middleware enhancer in front of the store enhancer
   composedEnhancer(middlewareEnhancer)
 )
 
 // Write a function that has `dispatch` and `getState` as arguments
 // Giving this function some optional parameters, this should be working here
+// Moved a similar version of this over into the exampleAddons folder
 export const fetchSomeData = (
   dispatch: typeof store.dispatch,
   getState: typeof store.getState

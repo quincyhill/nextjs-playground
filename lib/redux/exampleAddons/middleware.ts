@@ -91,7 +91,7 @@ export const delayedMessageMiddlware: (
     return next(action)
   }
 
-export function delayedActionMiddleWare(storeAPI: typeof store) {
+export function delayedActionMiddleware(storeAPI: typeof store) {
   return function wrapDispatch(next: typeof store.dispatch) {
     return function handleAction(action: RootAction) {
       if (action.type === 'todos/todoAdded') {
@@ -115,7 +115,7 @@ export function fetchTodosMiddlware(storeAPI: typeof store) {
       if (action.type === 'todos/todosFetched') {
         // make an api call to fetch todos from the server aka my nextjs api
         // I'll use fetch to make the api call since I'm trying to minimize use of axios
-        fetch('http://192.168.0.16:3000/api/fakeApi/todos', {
+        fetch('http://192.168.0.16:3000/api/v1/todos', {
           method: 'GET',
         })
           .then((response) => response.json())

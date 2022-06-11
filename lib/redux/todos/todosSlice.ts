@@ -78,7 +78,7 @@ export default function todosReducer(
 }
 
 // Correct url just needs valid todos for now
-const TODOURL = 'http://192.168.0.16:3000/api/fakeApi/todos'
+const TODOURL = 'http://192.168.0.16:3000/api/v1/todos'
 
 // Thunk function allows for side effects
 export async function fetchTodos(
@@ -86,20 +86,15 @@ export async function fetchTodos(
   getState: typeof store.getState
 ) {
   // Thunk function aka async function because it has some side effects / delay
-  const todos: Todo[] = [
-    { id: 0, text: 'Use Redux', completed: false, color: 'red' },
-    { id: 1, text: 'Use TypeScript', completed: false, color: 'blue' },
-    { id: 2, text: 'Use Next.js', completed: false, color: 'yellow' },
-    { id: 3, text: 'what is this', completed: true, color: 'green' },
-  ]
-
   // somewhere I have the default of 3 todos somewhere
   const stateBefore = getState()
   console.log('Todos before dispatch', stateBefore.todos.length)
 
   // Make a call to the fake API to get a list of todos AYO this is nice
   // Looks like CORS is not enabled on the fake API
-  const response = await fetch(TODOURL)
+  const response = await fetch(TODOURL, {
+    method: 'GET',
+  })
   const data = await response.json()
   // Dispatch the todosLoaded action to update the state
   dispatch({
@@ -119,19 +114,25 @@ export async function fetchTodos(
 }
 
 // Write a synchronous outer function that receives the `text` parameter:
-export function saveNewTodo(text: string) {
+// NOTE: again using any to fix our complex typing problem... not the best way but whatever
+export function saveNewTodo(text: string): any {
   // And then creates and returns the async thunk function:
+
+  // Creates and returns the async thunk function:
   return async function saveNewTodoThunk(
     dispatch: typeof store.dispatch,
     getState: typeof store.getState
   ) {
-    // Now we can use the text value and send it to the server
-    // could change this around
     const todoText = { text }
     const response = await fetch(TODOURL, {
       method: 'POST',
       body: JSON.stringify(todoText),
     })
+
+    // This is the response from the server
+    console.log(response.json())
+
+    // Classic dispatch to update the state
     dispatch({ type: 'todos/todoAdded', payload: todoText })
   }
 }
