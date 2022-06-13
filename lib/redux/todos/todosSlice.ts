@@ -81,7 +81,8 @@ export default function todosReducer(
 const TODOURL = 'http://192.168.0.16:3000/api/v1/todos'
 
 // Thunk function allows for side effects
-export async function fetchTodos(
+// Need to figure out where this is called lol
+export async function fetchTodosThunk(
   dispatch: typeof store.dispatch,
   getState: typeof store.getState
 ) {
@@ -92,30 +93,30 @@ export async function fetchTodos(
 
   // Make a call to the fake API to get a list of todos AYO this is nice
   // Looks like CORS is not enabled on the fake API
-  const response = await fetch(TODOURL, {
-    method: 'GET',
-  })
-  const data = await response.json()
-  // Dispatch the todosLoaded action to update the state
-  dispatch({
-    type: 'todos/todosLoaded',
-    payload: {
-      todos: data,
-    },
-  })
+  // Add error handling duh...
+  try {
+    const response = await fetch(TODOURL, {
+      method: 'GET',
+    })
+    const data = await response.json()
 
-  /*
-  // Maybe do some middleware stuff here?
-  dispatch({ type: 'todos/todosLoaded', payload: { todos: todos } })
-  */
-
+    dispatch({
+      type: 'todos/todosLoaded',
+      payload: {
+        todos: data,
+      },
+    })
+  } catch (error) {
+    // Should not dispatch an action if there is an error
+    console.error(error)
+  }
   const stateAfter = getState()
   console.log('Number of todos after loading', stateAfter.todos.length)
 }
 
 // Write a synchronous outer function that receives the `text` parameter:
 // NOTE: again using any to fix our complex typing problem... not the best way but whatever
-export function saveNewTodo(text: string): any {
+export function createTodoThunk(text: string): any {
   // And then creates and returns the async thunk function:
 
   // Creates and returns the async thunk function:
@@ -124,15 +125,40 @@ export function saveNewTodo(text: string): any {
     getState: typeof store.getState
   ) {
     const todoText = { text }
-    const response = await fetch(TODOURL, {
-      method: 'POST',
-      body: JSON.stringify(todoText),
-    })
 
-    // This is the response from the server
-    console.log(response.json())
+    try {
+      const response = await fetch(TODOURL, {
+        method: 'POST',
+        body: JSON.stringify(todoText),
+      })
 
-    // Classic dispatch to update the state
-    dispatch({ type: 'todos/todoAdded', payload: todoText })
+      // This is the response from the server
+      console.log(response.json())
+
+      dispatch({ type: 'todos/todoAdded', payload: todoText })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
+
+export function deleteTodoThunk(id: number): any {
+  return async function deleteTodoThunk(
+    dispatch: typeof store.dispatch,
+    getState: typeof store.getState
+  ) {
+    // yea still some fail going on over here
+    try {
+      const response = await fetch(`${TODOURL}?id=${id}}`, {
+        method: 'DELETE',
+      })
+
+      // This is the response from the server
+      console.log(response.json())
+
+      dispatch({ type: 'todos/todoDeleted', payload: { id } })
+    } catch (error) {
+      console.error(error)
+    }
   }
 }

@@ -6,14 +6,14 @@ import { Provider } from 'react-redux'
 import { store } from '../lib/redux/store'
 // just run what I have in index, right now i'll just ignore this
 // import {} from '../lib/redux/index'
-import { fetchTodos } from '../lib/redux/todos/todosSlice'
+import { fetchTodosThunk } from '../lib/redux/todos/todosSlice'
 
 const name = 'Quincy Hill'
 export const siteTitle = "Quincy's fake Next.js blog"
 
 // lol what a hack but lets see if it works
 // NOTE: This type of casting should be avoided whenever possible but I just needed it work, mostly likey to cause bugs
-store.dispatch(fetchTodos as any)
+store.dispatch(fetchTodosThunk as any)
 
 interface LayoutProps {
   children: React.ReactNode

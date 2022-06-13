@@ -1,24 +1,8 @@
 // these are helpful wrapper around node stuff
 import { NextApiRequest, NextApiResponse } from 'next'
-import type { ColorChoice, Todo } from '../../../lib/types'
-import path from 'path'
+import type { ColorChoice, Todo } from '../../../../lib/types'
 import Cors from 'cors'
-import sqlite3 from 'sqlite3'
-// Lets see how this works
-import { promisify } from 'util'
-
-const DATABASE_PATH = path.join(
-  __dirname,
-  '../../../../..',
-  'data',
-  'todos.sqlite3'
-)
-
-// The database
-const db = new sqlite3.Database(DATABASE_PATH)
-
-// Use the promise pattern for sqlite3 we we dont have to worry about callback hell
-const query = promisify(db.all).bind(db)
+import { db, query } from '../../../../lib/api/utilities'
 
 // SQL query for creating a todos table if it doesnt already exist.
 const createTableQuery = `
@@ -31,14 +15,25 @@ const createTableQuery = `
 `
 
 // I already have my list set
-
 // Run an INSERT query on some given table and insert the given object
-const create = async (table: string, obj: Todo) => {
+const createTodo = async (table: string, obj: Todo) => {
   const keys = Object.keys(obj).join(',')
   const values = Object.values(obj)
     .map((v) => `'${v}'`)
     .join(',')
   const res = await query(`INSERT INTO ${table} (${keys}) VALUES (${values})`)
+  return res
+}
+
+// Update a todo in the table
+const updateTodo = async (table: string, id: number, obj: Todo) => {
+  const keys = Object.keys(obj).join(',')
+  const values = Object.values(obj)
+    .map((v) => `'${v}'`)
+    .join(',')
+  const res = await query(
+    `UPDATE ${table} SET (${keys}) = (${values}) WHERE id = ${id}`
+  )
   return res
 }
 
@@ -60,28 +55,14 @@ const readAllTodos = async (table: string): Promise<any> => {
 
 // Main controller of the sql script. This is inside an async function so we can use the promist pattern
 
-// this was a test the real ones will be determined in the text
-const run = async () => {
-  // Create todos table if it doesnt already exist
-  await query(createTableQuery)
-
-  // Create a new todo, for now its just the first on the list
-  await create('todos', initialState[0])
-
-  // Read all todos
-  const todos = await readAllTodos('todos')
-
-  // Print to console
-  console.log(todos)
-}
-
-// Here i'll setup cors middleware
+// Valid Cors
 const cors = Cors({
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST'],
 })
 
 // Helper function to wait for a middleware to execute before continuing
 // And to throw an error when an error happens in a middleware
+// Function is too general but works for now
 function runMiddleware(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -107,9 +88,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Run the middleware to enable CORS
   await runMiddleware(req, res, cors)
-
-  // get query value, not using it ATM but here it is
-  const resetQueryValue = req.query.reset
 
   if (req.method === 'GET') {
     // we are making external calls here so there could be failure / delay
@@ -144,22 +122,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       // Creating a new Todo
       // Print out the body of the request
-      console.log(req.body)
+
+      // Not really doing any checks for now just assume its only coming in from todo list
+
+      const reqBody: { text: string } = JSON.parse(req.body)
+
+      // We will write a new todo to the database, now we want id to autoincrement
+      await createTodo('todos', <Todo>{
+        id: 1,
+        text: reqBody.text,
+        completed: false,
+        color: null,
+      })
+
       res.status(200).json({ message: 'success' })
     } catch (error) {
       console.error(error)
-    }
-  } else if (req.method === 'PUT') {
-    try {
-      //
-    } catch (error) {
-      console.error(error)
-    }
-  } else if (req.method === 'DELETE') {
-    try {
-      //
-    } catch (error) {
-      console.error(error)
+      res.status(500).json({ error })
     }
   }
 }

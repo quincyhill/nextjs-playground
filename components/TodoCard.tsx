@@ -4,7 +4,7 @@ import type { Todo, AppState, ColorChoice, StatusChoice } from '../lib/types'
 
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 import { store } from '../lib/redux/store'
-import { saveNewTodo } from '../lib/redux/todos/todosSlice'
+import { createTodoThunk, deleteTodoThunk } from '../lib/redux/todos/todosSlice'
 
 // All my options for color choices
 const colorList: ColorChoice[] = [
@@ -95,11 +95,16 @@ const TodoListItem = ({ id }: { id: number }) => {
           <button
             className="p-1 bg-red-400 hover:bg-red-600 rounded-full"
             onClick={() => {
-              // stuff here
+              // Ok will instead use the thunk so that the database also gets updated
+
+              dispatch(deleteTodoThunk(id))
+
+              /*
               dispatch({
                 type: 'todos/todoDeleted',
                 payload: { id: todo.id },
               })
+              */
             }}
           >
             <X className="w-4 h-4" />
@@ -194,10 +199,12 @@ const TodoCard = () => {
       /*
       dispatch({ type: 'todos/todoAdded', payload: { text: trimmedText } })
       */
-      // And clear the text input
-      const saveNewTodoThunk = saveNewTodo(trimmedText)
+      // And clear the text input should return some thunk type but any works for now
+      const saveNewTodoThunk = createTodoThunk(trimmedText)
+
       // Need to update type for dispatch to include the thunk
       dispatch(saveNewTodoThunk)
+
       setTextInput('')
     }
   }
